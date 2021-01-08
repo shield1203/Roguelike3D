@@ -9,6 +9,7 @@ class ARoguelike3DGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 
-public:
-	ARoguelike3DGameMode();
+protected:
+	UPROPERTY(EditAnyWhere, Category = "GameMode_Widget", meta = (AllowPrivateAccess = "true"))
+	class UUserWidget* m_mainWidget;
 };

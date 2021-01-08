@@ -9,6 +9,9 @@ class ROGUELIKE3D_API AIntroGameMode : public ARoguelike3DGameMode
 {
 	GENERATED_BODY()
 	
-private:
+protected:
+	virtual void StartPlay();
+
+public:
 	AIntroGameMode();
 };
