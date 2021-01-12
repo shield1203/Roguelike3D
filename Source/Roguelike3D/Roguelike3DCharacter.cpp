@@ -9,6 +9,8 @@
 
 ARoguelike3DCharacter::ARoguelike3DCharacter()
 {
+	PrimaryActorTick.bCanEverTick = true;
+
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 
 	bUseControllerRotationPitch = false;
@@ -20,7 +22,7 @@ ARoguelike3DCharacter::ARoguelike3DCharacter()
 
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
-	CameraBoom->TargetArmLength = 300.0f; 
+	CameraBoom->TargetArmLength = 800.0f; 
 	CameraBoom->bUsePawnControlRotation = true;
 
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
@@ -34,6 +36,11 @@ void ARoguelike3DCharacter::SetupPlayerInputComponent(class UInputComponent* Pla
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &ARoguelike3DCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ARoguelike3DCharacter::MoveRight);
+}
+
+void ARoguelike3DCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
 }
 
 void ARoguelike3DCharacter::MoveForward(float Value)
