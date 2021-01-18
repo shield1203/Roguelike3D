@@ -3,6 +3,8 @@
 #include "UObject/ConstructorHelpers.h"
 #include "Roguelike3DPlayerController.h"
 #include "Roguelike3DCharacter.h"
+#include "PortalSystem.h"
+#include "Portal.h"
 
 AChapterGameMode::AChapterGameMode()
 {	
@@ -19,6 +21,8 @@ AChapterGameMode::AChapterGameMode()
 	{
 		m_mainWidget = CreateWidget(GetWorld(), PlayerWidget.Class);
 	}
+
+	m_portalSystem = CreateDefaultSubobject<UPortalSystem>(TEXT("GameMode_PortalSystem"));
 }
 
 void AChapterGameMode::StartPlay()
@@ -26,4 +30,11 @@ void AChapterGameMode::StartPlay()
 	Super::StartPlay();
 
 	m_mainWidget->AddToViewport();
+
+	m_portalSystem->SetRandomRoguelikeMap();
+}
+
+APortal* AChapterGameMode::GetArrivalPortal(int32 mapNumber, int32 portalNumber)
+{
+	return m_portalSystem->GetArrivalPortal(mapNumber, portalNumber);
 }

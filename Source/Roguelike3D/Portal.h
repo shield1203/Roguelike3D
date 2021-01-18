@@ -12,10 +12,10 @@ class ROGUELIKE3D_API APortal : public AActor
 protected:
 	bool m_activation;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Portal, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Portal, meta = (AllowPrivateAccess = "true"))
 	int32 m_mapNumber;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Portal, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Portal, meta = (AllowPrivateAccess = "true"))
 	int32 m_portalNumber;
 
 	UPROPERTY()
@@ -33,6 +33,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class UWidgetComponent* m_buttonWidgetComponent;
 
+	UPROPERTY()
+	APortal* m_arrivalPortal;
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -43,4 +46,16 @@ public:
 	FORCEINLINE	int32 GetMapNumber() const { return m_mapNumber; }
 
 	FORCEINLINE	int32 GetPortalNumber() const { return m_portalNumber; };
+
+	void SetArrivalPortal(APortal* ArrivalPortal);
+
+	UFUNCTION(BlueprintCallable)
+	void OnPlayerBeginOverlap(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION(BlueprintCallable)
+	void OnPlayerEndOverlap(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	UFUNCTION(BlueprintCallable)
+	void OnPressButton();
+
 };
