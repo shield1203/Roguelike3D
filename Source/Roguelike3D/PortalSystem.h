@@ -4,7 +4,17 @@
 #include "UObject/NoExportTypes.h"
 #include "PortalSystem.generated.h"
 
-USTRUCT()
+USTRUCT(Atomic, BlueprintType, Blueprintable)
+struct FPortalNumber
+{
+	GENERATED_USTRUCT_BODY()
+
+public:
+	UPROPERTY()
+	TArray<int32> number;
+};
+
+USTRUCT(Atomic, BlueprintType, Blueprintable)
 struct FMapPos
 {
 	GENERATED_USTRUCT_BODY()
@@ -22,20 +32,25 @@ public:
 	int32 yPos;
 };
 
-UCLASS()
+UCLASS(Blueprintable, ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class ROGUELIKE3D_API UPortalSystem : public UObject
 {
 	GENERATED_BODY()
 	
-private:
+protected:
+	UPROPERTY()
 	int32 m_maxMapNumber;
 
+	UPROPERTY()
 	int32 m_maxPortalCount;
 
+	UPROPERTY()
 	TArray<int32> m_remainMapNumber;
 
-	TMap<int32, TArray<int32>> m_portals;
+	UPROPERTY()
+	TMap<int32, FPortalNumber> m_portals;
 
+	UPROPERTY()
 	TArray<FMapPos> m_mapPos;
 
 private:
@@ -49,6 +64,8 @@ public:
 	UPortalSystem();
 
 	void SetRandomRoguelikeMap();
+
+	void SetArrivalPortals();
 
 	class APortal* GetArrivalPortal(int32 mapNumber, int32 portalNumber);
 };

@@ -18,7 +18,7 @@ void UPortalSystem::InitializePortalData()
 		m_remainMapNumber.Add(mapNumber);
 
 		m_portals.Add(mapNumber);
-		m_portals[mapNumber].Init(-1, m_maxPortalCount);
+		m_portals[mapNumber].number.Init(-1, m_maxPortalCount);
 	}
 	m_remainMapNumber.Remove(0);
 
@@ -34,6 +34,8 @@ void UPortalSystem::SetRandomRoguelikeMap()
 	{
 		AttachMap();
 	}
+
+	SetArrivalPortals();
 }
 
 void UPortalSystem::AttachMap()
@@ -45,22 +47,22 @@ void UPortalSystem::AttachMap()
 
 	int32 portalDirection = rand() % m_maxPortalCount;
 
-	if (m_portals[randomMapNumber][portalDirection] != -1 && IsEmptyPos(m_mapPos[randomMapIndex].xPos, m_mapPos[randomMapIndex].yPos, portalDirection))
+	if (m_portals[randomMapNumber].number[portalDirection] == -1 && IsEmptyPos(m_mapPos[randomMapIndex].xPos, m_mapPos[randomMapIndex].yPos, portalDirection))
 	{
 		int32 mapNumberIndex = rand() % m_remainMapNumber.Num();
 		int32 attachMapNumber = m_remainMapNumber[mapNumberIndex];
 
-		m_portals[randomMapNumber][portalDirection] = attachMapNumber;
+		m_portals[randomMapNumber].number[portalDirection] = attachMapNumber;
 
 		int32 directionXPos = m_mapPos[randomMapIndex].xPos;
 		int32 directionYPos = m_mapPos[randomMapIndex].yPos;
 
 		switch (portalDirection)
 		{
-		case 0: m_portals[attachMapNumber][2] = randomMapNumber; directionYPos += 1; break; // North
-		case 1: m_portals[attachMapNumber][3] = randomMapNumber; directionXPos += 1; break; // East
-		case 2: m_portals[attachMapNumber][0] = randomMapNumber; directionYPos -= 1; break; // South
-		case 3: m_portals[attachMapNumber][1] = randomMapNumber; directionXPos -= 1; break; // West
+		case 0: m_portals[attachMapNumber].number[2] = randomMapNumber; directionYPos += 1; break; // North
+		case 1: m_portals[attachMapNumber].number[3] = randomMapNumber; directionXPos += 1; break; // East
+		case 2: m_portals[attachMapNumber].number[0] = randomMapNumber; directionYPos -= 1; break; // South
+		case 3: m_portals[attachMapNumber].number[1] = randomMapNumber; directionXPos -= 1; break; // West
 		}
 
 		m_mapPos.Add(FMapPos(attachMapNumber, directionXPos, directionYPos));
@@ -91,11 +93,21 @@ bool UPortalSystem::IsEmptyPos(int32 xPos, int32 yPos, int32 direction)
 	return true;
 }
 
+void UPortalSystem::SetArrivalPortals()
+{
+	UWorld* world = GetWorld();
+
+	for (TActorIterator<APortal> portal(world); portal; ++portal)
+	{
+		portal->SetArrivalPortal(GetArrivalPortal(portal->GetMapNumber(), portal->GetPortalNumber()));
+	}
+}
+
 APortal* UPortalSystem::GetArrivalPortal(int32 mapNumber, int32 portalNumber)
 {
 	APortal* pArrivalPortal = nullptr;
 
-	if(m_portals[mapNumber][portalNumber] == -1) return pArrivalPortal;
+	if(m_portals[mapNumber].number[portalNumber] == -1) return pArrivalPortal;
 
 	UWorld* world = GetWorld();
 	int32 arrivalPortalNumber;
@@ -110,7 +122,7 @@ APortal* UPortalSystem::GetArrivalPortal(int32 mapNumber, int32 portalNumber)
 
 	for (TActorIterator<APortal> portal(world); portal; ++portal)
 	{
-		if (portal->GetMapNumber() == m_portals[mapNumber][portalNumber] && portal->GetPortalNumber() == arrivalPortalNumber)
+		if (portal->GetMapNumber() == m_portals[mapNumber].number[portalNumber] && portal->GetPortalNumber() == arrivalPortalNumber)
 		{
 			pArrivalPortal = Cast<APortal>(*portal);
 			break;

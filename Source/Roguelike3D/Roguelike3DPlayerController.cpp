@@ -4,7 +4,7 @@
 ARoguelike3DPlayerController::ARoguelike3DPlayerController()
 {
 	bShowMouseCursor = true;
-	DefaultMouseCursor = EMouseCursor::Default;
+	DefaultMouseCursor = EMouseCursor::Crosshairs;
 }
 
 void ARoguelike3DPlayerController::PlayerTick(float DeltaTime)
