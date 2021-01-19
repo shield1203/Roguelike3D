@@ -51,7 +51,7 @@ void ARoguelike3DCharacter::MoveForward(float Value)
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
 
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-		AddMovementInput(Direction, Value);
+		AddMovementInput(Direction, Value + m_ability.fSpeed);
 	}
 }
 
@@ -64,6 +64,6 @@ void ARoguelike3DCharacter::MoveRight(float Value)
 	
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 	
-		AddMovementInput(Direction, Value);
+		AddMovementInput(Direction, Value + m_ability.fSpeed);
 	}
 }
