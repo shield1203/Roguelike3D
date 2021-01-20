@@ -43,6 +43,16 @@ void ARoguelike3DCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
+int32 ARoguelike3DCharacter::GetPlayerCurHP() const
+{
+	return m_ability.fHP;
+}
+
+int32 ARoguelike3DCharacter::GetPlayerMaxHP() const
+{
+	return m_ability.fMaxHP;
+}
+
 void ARoguelike3DCharacter::MoveForward(float Value)
 {
 	if ((Controller != NULL) && (Value != 0.0f))

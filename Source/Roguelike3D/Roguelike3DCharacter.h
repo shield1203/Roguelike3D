@@ -60,5 +60,11 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
+	UFUNCTION(BlueprintCallable)
+	int32 GetPlayerCurHP() const;
+
+	UFUNCTION(BlueprintCallable)
+	int32 GetPlayerMaxHP() const;
 };
 
