@@ -28,6 +28,10 @@ ARoguelike3DCharacter::ARoguelike3DCharacter()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); 
 	FollowCamera->bUsePawnControlRotation = false; 
+
+	//////
+	m_ability.fMaxHP = 100.f;
+	m_ability.fHP = m_ability.fMaxHP;
 }
 
 void ARoguelike3DCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -51,6 +55,11 @@ int32 ARoguelike3DCharacter::GetPlayerCurHP() const
 int32 ARoguelike3DCharacter::GetPlayerMaxHP() const
 {
 	return m_ability.fMaxHP;
+}
+
+float ARoguelike3DCharacter::GetPlayerPercentHP() const
+{
+	return m_ability.fHP / m_ability.fMaxHP;
 }
 
 void ARoguelike3DCharacter::MoveForward(float Value)

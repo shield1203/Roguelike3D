@@ -66,5 +66,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	int32 GetPlayerMaxHP() const;
+
+	UFUNCTION(BlueprintCallable)
+	float GetPlayerPercentHP() const;
 };
 

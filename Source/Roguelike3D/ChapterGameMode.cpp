@@ -4,11 +4,13 @@
 #include "Roguelike3DPlayerController.h"
 #include "Roguelike3DCharacter.h"
 #include "PortalSystem.h"
+#include "MinimapManager.h"
 #include "Portal.h"
 
 AChapterGameMode::AChapterGameMode()
 {	
 	PlayerControllerClass = ARoguelike3DPlayerController::StaticClass();
+	m_curMapNumber = 0;
 
 	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/Blueprints/BP_Character"));
 	if (PlayerPawnBPClass.Class != NULL)
@@ -23,18 +25,29 @@ AChapterGameMode::AChapterGameMode()
 	}
 
 	m_portalSystem = CreateDefaultSubobject<UPortalSystem>(TEXT("GameMode_PortalSystem"));
+	m_minimapManager = CreateDefaultSubobject<UMinimapManager>(TEXT("GameMode_MinimapManager"));
 }
 
 void AChapterGameMode::StartPlay()
 {
 	Super::StartPlay();
 
-	m_mainWidget->AddToViewport();
-
 	m_portalSystem->SetRandomRoguelikeMap();
+
+	m_mainWidget->AddToViewport();
 }
 
-APortal* AChapterGameMode::GetArrivalPortal(int32 mapNumber, int32 portalNumber)
+UMinimapManager* AChapterGameMode::GetMinimapManager() const
 {
-	return m_portalSystem->GetArrivalPortal(mapNumber, portalNumber);
+	return m_minimapManager;
+}
+
+void AChapterGameMode::SetCurMapNumber(int32 mapNumber)
+{
+	m_curMapNumber = mapNumber;
+}
+
+int32 AChapterGameMode::GetCurMapNumber() const
+{
+	return m_curMapNumber;
 }

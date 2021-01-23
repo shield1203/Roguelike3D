@@ -5,6 +5,7 @@
 #include "ChapterGameMode.generated.h"
 
 class UPortalSystem;
+class UMinimapManager;
 
 UCLASS()
 class ROGUELIKE3D_API AChapterGameMode : public ARoguelike3DGameMode
@@ -15,11 +16,24 @@ private:
 	UPROPERTY(EditAnywhere, Category = "GameMode_System")
 	UPortalSystem* m_portalSystem;
 
+	UPROPERTY(EditAnywhere, Category = "GameMode_Manager")
+	UMinimapManager* m_minimapManager;
+
+	UPROPERTY()
+	int32 m_curMapNumber;
+
 protected:
 	virtual void StartPlay();
 
 public:
 	AChapterGameMode();
 
-	class APortal* GetArrivalPortal(int32 mapNumber, int32 portalNumber);
+	UFUNCTION(Blueprintcallable)
+	class UMinimapManager* GetMinimapManager() const;
+
+	void SetCurMapNumber(int32 mapNumber);
+
+	UFUNCTION(Blueprintcallable)
+	int32 GetCurMapNumber() const;
+
 };

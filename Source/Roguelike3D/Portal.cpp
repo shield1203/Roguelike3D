@@ -34,7 +34,7 @@ APortal::APortal()
 	m_collisionComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("PortalCollisionComponent"));
 	m_collisionComponent->SetupAttachment(RootComponent);
 	m_collisionComponent->SetCapsuleHalfHeight(200.f);
-	m_collisionComponent->SetCapsuleRadius(3.f);
+	m_collisionComponent->SetCapsuleRadius(20.f);
 	m_collisionComponent->SetGenerateOverlapEvents(true);
 	m_collisionComponent->OnComponentBeginOverlap.AddDynamic(this, &APortal::OnPlayerBeginOverlap);
 	m_collisionComponent->OnComponentEndOverlap.AddDynamic(this, &APortal::OnPlayerEndOverlap);
@@ -65,16 +65,6 @@ void APortal::BeginPlay()
 {
 	Super::BeginPlay();
 
-	UWorld* pWorld = GetWorld();
-	if (pWorld)
-	{
-		AChapterGameMode* pGameMode = Cast<AChapterGameMode>(UGameplayStatics::GetGameMode(pWorld));
-		if (pGameMode)
-		{
-			//m_arrivalPortal = pGameMode->GetArrivalPortal(m_mapNumber, m_portalNumber);
-		}
-	}
-
 	m_particleComponent->SetActive(false);
 	m_buttonWidgetComponent->SetVisibility(false);
 }
@@ -101,6 +91,8 @@ void APortal::OnPlayerBeginOverlap(class UPrimitiveComponent* OverlappedComp, cl
 	{
 		m_buttonWidgetComponent->SetVisibility(true);
 		EnableInput(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+
+		m_particleComponent->SetActive(true);
 	}
 }
 
@@ -112,6 +104,8 @@ void APortal::OnPlayerEndOverlap(class UPrimitiveComponent* OverlappedComp, clas
 	{
 		m_buttonWidgetComponent->SetVisibility(false);
 		DisableInput(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+
+		m_particleComponent->SetActive(false);
 	}
 }
 
@@ -123,5 +117,15 @@ void APortal::OnPressButton()
 		FVector destinationLocation = m_arrivalPortal->GetActorLocation();
 		destinationLocation.Z += 50.f;
 		pPlayer->SetActorLocation(destinationLocation);
+
+		UWorld* pWorld = GetWorld();
+		if (pWorld)
+		{
+			AChapterGameMode* pGameMode = Cast<AChapterGameMode>(UGameplayStatics::GetGameMode(pWorld));
+			if (pGameMode)
+			{
+				pGameMode->SetCurMapNumber(m_arrivalPortal->GetMapNumber());
+			}
+		}
 	}
 }
