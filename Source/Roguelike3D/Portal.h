@@ -15,6 +15,10 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Portal, meta = (AllowPrivateAccess = "true"))
 	int32 m_mapNumber;
 
+	int32 m_mapXPos;
+
+	int32 m_mapYPos;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Portal, meta = (AllowPrivateAccess = "true"))
 	int32 m_portalNumber;
 
@@ -47,7 +51,7 @@ public:
 
 	FORCEINLINE	int32 GetPortalNumber() const { return m_portalNumber; };
 
-	void SetArrivalPortal(APortal* ArrivalPortal);
+	void SetArrivalPortal(APortal* ArrivalPortal, int32 xPos, int32 yPos);
 
 	UFUNCTION(BlueprintCallable)
 	void OnPlayerBeginOverlap(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);

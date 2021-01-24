@@ -60,6 +60,8 @@ private:
 
 	bool IsEmptyPos(int32 xPos, int32 yPos, int32 direction);
 
+	FIntPoint GetMapPos(int32 mapNumber);
+
 public:
 	UPortalSystem();
 

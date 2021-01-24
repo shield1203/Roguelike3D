@@ -1,5 +1,7 @@
 #include "Roguelike3DPlayerController.h"
+#include "Kismet/GameplayStatics.h"
 #include "Roguelike3DCharacter.h"
+#include "ChapterGameMode.h"
 
 ARoguelike3DPlayerController::ARoguelike3DPlayerController()
 {
@@ -18,7 +20,8 @@ void ARoguelike3DPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 
-	//InputComponent->BindAction("PrintAngle", IE_Pressed, this, &ARoguelike3DPlayerController::OnPrintAnglePressed);
+	InputComponent->BindAction("BigMap", IE_Pressed, this, &ARoguelike3DPlayerController::OnOpenBigmap);
+	InputComponent->BindAction("BigMap", IE_Released, this, &ARoguelike3DPlayerController::OnCloseBigmap);
 }
 
 void ARoguelike3DPlayerController::SetPlayerRotation()
@@ -35,6 +38,32 @@ void ARoguelike3DPlayerController::SetPlayerRotation()
 			float fDegree = FMath::RadiansToDegrees(fRadian);
 
 			pPlayerPawn->SetActorRotation(FRotator(0, fDegree, 0));
+		}
+	}
+}
+
+void ARoguelike3DPlayerController::OnOpenBigmap()
+{
+	UWorld* pWorld = GetWorld();
+	if (pWorld)
+	{
+		AChapterGameMode* pGameMode = Cast<AChapterGameMode>(UGameplayStatics::GetGameMode(pWorld));
+		if (pGameMode)
+		{
+			pGameMode->VisibleBigmap(true);
+		}
+	}
+}
+
+void ARoguelike3DPlayerController::OnCloseBigmap()
+{
+	UWorld* pWorld = GetWorld();
+	if (pWorld)
+	{
+		AChapterGameMode* pGameMode = Cast<AChapterGameMode>(UGameplayStatics::GetGameMode(pWorld));
+		if (pGameMode)
+		{
+			pGameMode->VisibleBigmap(false);
 		}
 	}
 }

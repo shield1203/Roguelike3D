@@ -18,4 +18,8 @@ protected:
 
 public:
 	ARoguelike3DPlayerController();
+
+	void OnOpenBigmap();
+
+	void OnCloseBigmap();
 };

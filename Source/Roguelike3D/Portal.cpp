@@ -76,9 +76,11 @@ void APortal::Tick(float DeltaTime)
 	//if(WasInput)
 }
 
-void APortal::SetArrivalPortal(APortal* ArrivalPortal)
+void APortal::SetArrivalPortal(APortal* ArrivalPortal, int32 xPos, int32 yPos)
 {
 	m_arrivalPortal = ArrivalPortal;
+	m_mapXPos = xPos;
+	m_mapYPos = yPos;
 
 	if (m_arrivalPortal == nullptr) Destroy();
 }
@@ -124,7 +126,7 @@ void APortal::OnPressButton()
 			AChapterGameMode* pGameMode = Cast<AChapterGameMode>(UGameplayStatics::GetGameMode(pWorld));
 			if (pGameMode)
 			{
-				pGameMode->SetCurMapNumber(m_arrivalPortal->GetMapNumber());
+				pGameMode->SetCurMapNumber(m_arrivalPortal->GetMapNumber(), m_mapXPos, m_mapYPos);
 			}
 		}
 	}

@@ -67,8 +67,6 @@ void UPortalSystem::AttachMap()
 
 		m_mapPos.Add(FMapPos(attachMapNumber, directionXPos, directionYPos));
 		m_remainMapNumber.Remove(attachMapNumber);
-
-		UE_LOG(LogTemp, Warning, TEXT("AttachMap - xPos : %d, yPos : %d"), directionXPos, directionYPos);
 	}
 }
 
@@ -93,13 +91,30 @@ bool UPortalSystem::IsEmptyPos(int32 xPos, int32 yPos, int32 direction)
 	return true;
 }
 
+FIntPoint UPortalSystem::GetMapPos(int32 mapNumber)
+{
+	FIntPoint mapPos = FIntPoint(0);
+
+	for (auto pos : m_mapPos)
+	{
+		if (pos.mapNumber == mapNumber)
+		{
+			mapPos.X = pos.xPos;
+			mapPos.Y = pos.yPos;
+		}
+	}
+
+	return mapPos;
+}
+
 void UPortalSystem::SetArrivalPortals()
 {
 	UWorld* world = GetWorld();
 
 	for (TActorIterator<APortal> portal(world); portal; ++portal)
 	{
-		portal->SetArrivalPortal(GetArrivalPortal(portal->GetMapNumber(), portal->GetPortalNumber()));
+		FIntPoint portalMapPos = GetMapPos(portal->GetMapNumber());
+		portal->SetArrivalPortal(GetArrivalPortal(portal->GetMapNumber(), portal->GetPortalNumber()), portalMapPos.X, portalMapPos.Y);
 	}
 }
 
