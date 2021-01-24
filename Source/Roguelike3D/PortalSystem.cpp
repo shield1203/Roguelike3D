@@ -101,6 +101,7 @@ FIntPoint UPortalSystem::GetMapPos(int32 mapNumber)
 		{
 			mapPos.X = pos.xPos;
 			mapPos.Y = pos.yPos;
+			break;
 		}
 	}
 

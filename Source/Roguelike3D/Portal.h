@@ -51,6 +51,10 @@ public:
 
 	FORCEINLINE	int32 GetPortalNumber() const { return m_portalNumber; };
 
+	FORCEINLINE	int32 GetMapXPos() const { return m_mapXPos; };
+
+	FORCEINLINE	int32 GetMapYPos() const { return m_mapYPos; };
+
 	void SetArrivalPortal(APortal* ArrivalPortal, int32 xPos, int32 yPos);
 
 	UFUNCTION(BlueprintCallable)

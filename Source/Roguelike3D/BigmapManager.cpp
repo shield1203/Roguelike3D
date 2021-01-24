@@ -15,7 +15,7 @@ void UBigmapManager::CheckVisitedBlocks(int32 mapNumber, int32 xPos, int32 yPos)
 	if (!m_visitedBlocks.Contains(mapNumber))
 	{
 		m_visitedBlocks.Add(mapNumber);
-		m_visitedBlocks[mapNumber].X = 0;
-		m_visitedBlocks[mapNumber].Y = 0;
+		m_visitedBlocks[mapNumber].X = xPos;
+		m_visitedBlocks[mapNumber].Y = yPos;
 	}
 }

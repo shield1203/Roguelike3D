@@ -126,7 +126,7 @@ void APortal::OnPressButton()
 			AChapterGameMode* pGameMode = Cast<AChapterGameMode>(UGameplayStatics::GetGameMode(pWorld));
 			if (pGameMode)
 			{
-				pGameMode->SetCurMapNumber(m_arrivalPortal->GetMapNumber(), m_mapXPos, m_mapYPos);
+				pGameMode->SetCurMapNumber(m_arrivalPortal->GetMapNumber(), m_arrivalPortal->GetMapXPos(), m_arrivalPortal->GetMapYPos());
 			}
 		}
 	}
