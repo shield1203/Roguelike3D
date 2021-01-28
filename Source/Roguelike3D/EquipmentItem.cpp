@@ -2,7 +2,7 @@
 
 AEquipmentItem::AEquipmentItem()
 {
-
+	//
 }
 
 void AEquipmentItem::Tick(float DeltaTime)

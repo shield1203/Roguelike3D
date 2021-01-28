@@ -2,6 +2,9 @@
 #include "Components/SceneComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "ChapterAssetManager.h"
+#include "ChapterGameMode.h"
+#include "Kismet/GameplayStatics.h"
 
 AItem::AItem()
 {
@@ -22,6 +25,16 @@ void AItem::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	UWorld* pWorld = GetWorld();
+	if (pWorld)
+	{
+		AChapterGameMode* pGameMode = Cast<AChapterGameMode>(UGameplayStatics::GetGameMode(pWorld));
+		if (pGameMode)
+		{
+			m_staticMeshComponent->SetStaticMesh(pGameMode->GetChapterAssetManager()->GetItemMesh());
+		}
+	}
+	//m_staticMeshComponent->SetStaticMesh();
 }
 
 void AItem::Tick(float DeltaTime)

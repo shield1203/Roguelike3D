@@ -5,6 +5,7 @@
 #include "ChapterGameMode.generated.h"
 
 class UPortalSystem;
+class UChapterAssetManager;
 class UBigmapManager;
 class UMinimapManager;
 
@@ -16,6 +17,9 @@ class ROGUELIKE3D_API AChapterGameMode : public ARoguelike3DGameMode
 private:
 	UPROPERTY(EditAnywhere, Category = "GameMode_System")
 	UPortalSystem* m_portalSystem;
+
+	UPROPERTY(EditAnywhere, Category = "GameMode_Manager")
+	UChapterAssetManager* m_chapterAssetManager;
 
 	UPROPERTY(EditAnywhere, Category = "GameMode_Manager")
 	UMinimapManager* m_minimapManager;
@@ -40,6 +44,9 @@ public:
 
 	UFUNCTION(Blueprintcallable)
 	UMinimapManager* GetMinimapManager() const;
+
+	UFUNCTION(Blueprintcallable)
+	UChapterAssetManager* GetChapterAssetManager() const;
 
 	void SetCurMapNumber(int32 mapNumber, int32 xPos, int32 yPos);
 

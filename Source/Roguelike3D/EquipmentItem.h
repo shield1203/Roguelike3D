@@ -33,7 +33,7 @@ class ROGUELIKE3D_API AEquipmentItem : public AItem
 	GENERATED_BODY()
 	
 protected:
-
+	
 
 public:
 	AEquipmentItem();

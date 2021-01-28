@@ -4,6 +4,7 @@
 #include "Roguelike3DPlayerController.h"
 #include "Roguelike3DCharacter.h"
 #include "PortalSystem.h"
+#include "ChapterAssetManager.h"
 #include "BigmapManager.h"
 #include "MinimapManager.h"
 #include "Portal.h"
@@ -32,6 +33,7 @@ AChapterGameMode::AChapterGameMode()
 	}
 
 	m_portalSystem = CreateDefaultSubobject<UPortalSystem>(TEXT("GameMode_PortalSystem"));
+	m_chapterAssetManager = CreateDefaultSubobject<UChapterAssetManager>(TEXT("GameMode_ChapterAssetManager"));
 	m_bigmapManager = CreateDefaultSubobject<UBigmapManager>(TEXT("GameMode_BigmapManager"));
 	m_minimapManager = CreateDefaultSubobject<UMinimapManager>(TEXT("GameMode_MinimapManager"));
 }
@@ -43,6 +45,11 @@ void AChapterGameMode::StartPlay()
 	m_portalSystem->SetRandomRoguelikeMap();
 
 	m_mainWidget->AddToViewport();
+}
+
+UChapterAssetManager* AChapterGameMode::GetChapterAssetManager() const
+{
+	return m_chapterAssetManager;
 }
 
 UBigmapManager* AChapterGameMode::GetBigmapManager() const
