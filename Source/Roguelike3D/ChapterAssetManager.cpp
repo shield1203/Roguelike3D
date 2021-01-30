@@ -4,12 +4,25 @@
 
 UChapterAssetManager::UChapterAssetManager()
 {
-	ConstructorHelpers::FObjectFinder<UStaticMesh> CoinItem(TEXT("/Game/Else/Mesh/coin"));
-	m_items.Add(CoinItem.Object);
+	TArray<FString> strAssetPath;
+	strAssetPath.Add(TEXT("/Game/Else/Mesh/coin"));
+	strAssetPath.Add(TEXT("/Game/PolygonCity/Meshes/Props/SM_Prop_LargeSign_Milkshake_01"));
+	strAssetPath.Add(TEXT("/Game/PolygonCity/Meshes/Props/SM_Prop_LargeSign_Donut_01"));
+
+	for (auto consumptionItemPath : strAssetPath)
+	{
+		ConstructorHelpers::FObjectFinder<UStaticMesh> ConsumptionItem(*consumptionItemPath);
+		m_consumptionItemStaticMesh.Add(ConsumptionItem.Object);
+	}
 }
 
 
-UStaticMesh* UChapterAssetManager::GetItemMesh()
+UStaticMesh* UChapterAssetManager::GetConsumptionItemMesh(uint8 ItemCode) const
 {
-	return m_items[0];
+	return m_consumptionItemStaticMesh[ItemCode];
+}
+
+UStaticMesh* UChapterAssetManager::GetEquipmentItemMesh(uint8 ItemCode) const
+{
+	return m_equipmentItemStaticMesh[ItemCode];
 }

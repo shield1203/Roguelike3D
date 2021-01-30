@@ -14,10 +14,10 @@ protected:
 	class USceneComponent* m_sceneCompoent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	class UStaticMeshComponent* m_staticMeshComponent;
+	class UBoxComponent* m_collisionComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	class UCapsuleComponent* m_collisionComponent;
+	class UStaticMeshComponent* m_staticMeshComponent;
 
 protected:
 	virtual void BeginPlay() override;

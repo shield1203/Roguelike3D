@@ -4,6 +4,8 @@
 #include "UObject/NoExportTypes.h"
 #include "ChapterAssetManager.generated.h"
 
+class UStaticMesh;
+
 UCLASS()
 class ROGUELIKE3D_API UChapterAssetManager : public UObject
 {
@@ -11,10 +13,15 @@ class ROGUELIKE3D_API UChapterAssetManager : public UObject
 	
 public:
 	UPROPERTY()
-	TArray<class UStaticMesh*> m_items;
+	TArray<UStaticMesh*> m_consumptionItemStaticMesh;
+
+	UPROPERTY()
+	TArray<UStaticMesh*> m_equipmentItemStaticMesh;
 
 public:
 	UChapterAssetManager();
 
-	class UStaticMesh* GetItemMesh();
+	UStaticMesh* GetConsumptionItemMesh(uint8 ItemCode) const;
+
+	UStaticMesh* GetEquipmentItemMesh(uint8 ItemCode) const;
 };

@@ -29,11 +29,9 @@ FVector2D UMinimapManager::GetPlayerIconLocation(int32 mapNumber)
 	if (pPlayer != nullptr)
 	{
 		float fMoveDistance = pPlayer->GetActorLocation().Y - m_MinimapData[mapNumber].YPos;
-		//PlayerIconLocation.X = (fMoveDistance / m_MinimapData[mapNumber].Height) * (GetMinimapTextureSize(mapNumber).X - 20.f);
 		PlayerIconLocation.X = (fMoveDistance / m_MinimapData[mapNumber].Height) * GetMinimapTextureSize(mapNumber).X;
 
 		fMoveDistance = pPlayer->GetActorLocation().X - m_MinimapData[mapNumber].XPos;
-		//PlayerIconLocation.Y = (1 - (fMoveDistance / m_MinimapData[mapNumber].Width)) * (GetMinimapTextureSize(mapNumber).Y - 20.f);
 		PlayerIconLocation.Y = (1 - (fMoveDistance / m_MinimapData[mapNumber].Width)) * GetMinimapTextureSize(mapNumber).Y;
 	}
 
@@ -52,11 +50,9 @@ FVector2D UMinimapManager::GetPortalIconLocation(int32 mapNumber, int32 portalNu
 			APortal* pPortalActor = Cast<APortal>(*portal);
 
 			float fActorLocation = pPortalActor->GetActorLocation().Y - m_MinimapData[mapNumber].YPos;
-			//PortalconLocation.X = (fActorLocation / m_MinimapData[mapNumber].Height) * (GetMinimapTextureSize(mapNumber).X - 20.f);
 			PortalconLocation.X = (fActorLocation / m_MinimapData[mapNumber].Height) * GetMinimapTextureSize(mapNumber).X;
 
 			fActorLocation = pPortalActor->GetActorLocation().X - m_MinimapData[mapNumber].XPos;
-			//PortalconLocation.Y = (1 - (fActorLocation / m_MinimapData[mapNumber].Width)) * (GetMinimapTextureSize(mapNumber).Y - 20.f);
 			PortalconLocation.Y = (1 - (fActorLocation / m_MinimapData[mapNumber].Width)) * GetMinimapTextureSize(mapNumber).Y;
 			break;
 		}

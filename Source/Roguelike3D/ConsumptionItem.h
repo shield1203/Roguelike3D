@@ -9,6 +9,8 @@ UENUM(BlueprintType)
 enum class EConsumptionItemCode : uint8
 {
 	Coin UMETA(DisplayName = "Consumption_Coin"),
+	Milkshake UMETA(DisplayName = "Consumption_Milkshake"),
+	Donut UMETA(DisplayName = "Consumption_Donut"),
 };
 
 USTRUCT(BlueprintType)
@@ -24,7 +26,16 @@ public:
 	float Value;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString StaticMeshPath;
+	FString Target;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float R;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float G;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float B;
 };
 
 UCLASS()
@@ -33,10 +44,30 @@ class ROGUELIKE3D_API AConsumptionItem : public AItem
 	GENERATED_BODY()
 	
 protected:
+	bool m_use;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UWidgetComponent* m_valueWidget;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	EConsumptionItemCode m_itemCode;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	FConsumptionItemData m_itemData;
 
+protected:
+	virtual void BeginPlay() override;
+
+	virtual void Tick(float DeltaTime) override;
 public:
 	AConsumptionItem();
 
-	virtual void Tick(float DeltaTime) override;
+	UFUNCTION(BlueprintCallable)
+	void SetItemCode(EConsumptionItemCode itemCode);
+
+	UFUNCTION(BlueprintCallable)
+	void LoadItemData();
+
+	UFUNCTION(BlueprintCallable)
+	void OnPlayerBeginOverlap(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 };
