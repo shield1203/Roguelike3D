@@ -30,6 +30,12 @@ private:
 	UPROPERTY(EditAnyWhere, Category = "GameMode_Widget", meta = (AllowPrivateAccess = "true"))
 	class UUserWidget* m_bigmapWidget;
 
+	UPROPERTY(EditAnyWhere, Category = "GameMode_Widget", meta = (AllowPrivateAccess = "true"))
+	class UUserWidget* m_inventoryWidget;
+
+	UPROPERTY()
+	bool m_flipInventory;
+
 	UPROPERTY()
 	int32 m_curMapNumber;
 
@@ -54,4 +60,6 @@ public:
 	int32 GetCurMapNumber() const;
 
 	void VisibleBigmap(bool bVisibility);
+
+	void FlipInventory();
 };

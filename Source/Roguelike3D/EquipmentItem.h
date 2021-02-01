@@ -8,7 +8,13 @@
 UENUM(BlueprintType)
 enum class EEquipmentItemCode : uint8
 {
-	Port UMETA(DisplayName = "Equipment_Port"),
+	Blade UMETA(DisplayName = "Equipment_Blade"),
+	Screwdriver UMETA(DisplayName = "Equipment_Screwdriver"),
+	Spanner UMETA(DisplayName = "Equipment_Spanner"),
+	RedFloatRing UMETA(DisplayName = "Equipment_RedFloatRing"),
+	DuckFloatRing UMETA(DisplayName = "Equipment_DuckFloatRing"),
+	RubbishBinLid UMETA(DisplayName = "Equipment_RubbishBinLid"),
+	Ford UMETA(DisplayName = "Equipment_Ford"),
 };
 
 UENUM(BlueprintType)
@@ -33,6 +39,12 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float Value;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString Name;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FName SocketName;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FString Explanation;
@@ -69,5 +81,17 @@ public:
 	void LoadItemData();
 
 	UFUNCTION(BlueprintCallable)
+	void SetEquip(bool bEquip);
+
+	UFUNCTION(BlueprintCallable)
+	FEquipmentItemData GetItemData() const;
+
+	UFUNCTION(BlueprintCallable)
 	class UTexture2D* GetThumbnail() const;
+
+	UFUNCTION(BlueprintCallable)
+	float GetValue() const;
+
+	UFUNCTION(BlueprintCallable)
+	FName GetSocketName() const;
 };

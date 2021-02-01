@@ -7,6 +7,7 @@
 #include "ChapterAssetManager.h"
 #include "ChapterGameMode.h"
 #include "Roguelike3DCharacter.h"
+#include "Inventory.h"
 
 AConsumptionItem::AConsumptionItem()
 {
@@ -32,6 +33,8 @@ AConsumptionItem::AConsumptionItem()
 	m_valueWidget->SetDrawSize(FVector2D(500.0f, 60.0f));
 	m_valueWidget->RegisterComponent();
 	m_valueWidget->SetVisibility(false);
+
+	m_staticMeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 void AConsumptionItem::BeginPlay()
@@ -101,8 +104,25 @@ void AConsumptionItem::OnPlayerBeginOverlap(class UPrimitiveComponent* Overlappe
 
 	if (pPlayerPawn != nullptr && !m_use)
 	{
-		m_use = true;
+		Use(pPlayerPawn);
+
 		m_staticMeshComponent->SetVisibility(false);
+		m_collisionComponent->SetSimulatePhysics(false);
+		m_collisionComponent->SetCollisionProfileName(TEXT("NoCollision"));
+		m_collisionComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		m_valueWidget->SetVisibility(true);
 	}
+}
+
+void AConsumptionItem::Use(ARoguelike3DCharacter* pPlayerPawn)
+{
+	m_use = true;
+
+	switch (m_itemCode)
+	{
+	case EConsumptionItemCode::Coin: pPlayerPawn->GetInventory()->ObtainCoin(m_itemData.Value); break;
+	case EConsumptionItemCode::Milkshake:
+	case EConsumptionItemCode::Donut: pPlayerPawn->RecoveryHP(m_itemData.Value); break;
+	}
+	
 }

@@ -8,7 +8,7 @@ UCLASS()
 class ROGUELIKE3D_API ARoguelike3DPlayerController : public APlayerController
 {
 	GENERATED_BODY()
-	
+
 private:
 	void SetPlayerRotation();
 
@@ -22,4 +22,6 @@ public:
 	void OnOpenBigmap();
 
 	void OnCloseBigmap();
+
+	void OnFlipInventory();
 };

@@ -41,8 +41,11 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Character, meta = (AllowPrivateAccess = "true"))
 	FAbilityData m_ability;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Character, meta = (AllowPrivateAccess = "true"))
+	class UInventory* m_inventory;
 
 public:
 	ARoguelike3DCharacter();
@@ -61,13 +64,22 @@ public:
 	
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
-	UFUNCTION(BlueprintCallable)
-	int32 GetPlayerCurHP() const;
+	FORCEINLINE class UInventory* GetInventory() const { return m_inventory; }
 
 	UFUNCTION(BlueprintCallable)
-	int32 GetPlayerMaxHP() const;
+	int32 GetPlayerAttackPower();
 
 	UFUNCTION(BlueprintCallable)
-	float GetPlayerPercentHP() const;
+	int32 GetPlayerDefensivePower();
+
+	UFUNCTION(BlueprintCallable)
+	int32 GetPlayerCurHP();
+
+	UFUNCTION(BlueprintCallable)
+	int32 GetPlayerMaxHP();
+
+	UFUNCTION(BlueprintCallable)
+	float GetPlayerPercentHP();
+
+	void RecoveryHP(float value);
 };
-

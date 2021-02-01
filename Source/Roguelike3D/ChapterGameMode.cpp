@@ -9,6 +9,11 @@
 #include "MinimapManager.h"
 #include "Portal.h"
 
+//
+#include "Kismet/GameplayStatics.h"
+#include "Inventory.h"
+#include "EquipmentItem.h"
+
 AChapterGameMode::AChapterGameMode()
 {	
 	PlayerControllerClass = ARoguelike3DPlayerController::StaticClass();
@@ -32,6 +37,13 @@ AChapterGameMode::AChapterGameMode()
 		m_bigmapWidget = CreateWidget(GetWorld(), BigmapWidget.Class);
 	}
 
+	static ConstructorHelpers::FClassFinder<UUserWidget> InventoryWidget(TEXT("/Game/Widgets/Chapter/WB_Inventory"));
+	if (InventoryWidget.Succeeded())
+	{
+		m_inventoryWidget = CreateWidget(GetWorld(), InventoryWidget.Class);
+	}
+	m_flipInventory = false;
+
 	m_portalSystem = CreateDefaultSubobject<UPortalSystem>(TEXT("GameMode_PortalSystem"));
 	m_chapterAssetManager = CreateDefaultSubobject<UChapterAssetManager>(TEXT("GameMode_ChapterAssetManager"));
 	m_bigmapManager = CreateDefaultSubobject<UBigmapManager>(TEXT("GameMode_BigmapManager"));
@@ -45,6 +57,44 @@ void AChapterGameMode::StartPlay()
 	m_portalSystem->SetRandomRoguelikeMap();
 
 	m_mainWidget->AddToViewport();
+
+	// test
+	UWorld* pWorld = GetWorld();
+	if (pWorld)
+	{
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.Owner = this;
+
+		AEquipmentItem* item00 = pWorld->SpawnActor<AEquipmentItem>(FVector(0), FRotator(0), SpawnParams);
+		item00->SetItemCode(EEquipmentItemCode::Blade);
+
+		AEquipmentItem* item01 = pWorld->SpawnActor<AEquipmentItem>(FVector(0), FRotator(0), SpawnParams);
+		item01->SetItemCode(EEquipmentItemCode::Screwdriver);
+
+		AEquipmentItem* item02 = pWorld->SpawnActor<AEquipmentItem>(FVector(0), FRotator(0), SpawnParams);
+		item02->SetItemCode(EEquipmentItemCode::Spanner);
+
+		AEquipmentItem* item03 = pWorld->SpawnActor<AEquipmentItem>(FVector(0), FRotator(0), SpawnParams);
+		item03->SetItemCode(EEquipmentItemCode::RedFloatRing);
+
+		AEquipmentItem* item04 = pWorld->SpawnActor<AEquipmentItem>(FVector(0), FRotator(0), SpawnParams);
+		item04->SetItemCode(EEquipmentItemCode::DuckFloatRing);
+
+		AEquipmentItem* item05 = pWorld->SpawnActor<AEquipmentItem>(FVector(0), FRotator(0), SpawnParams);
+		item05->SetItemCode(EEquipmentItemCode::RubbishBinLid);
+
+		AEquipmentItem* item06 = pWorld->SpawnActor<AEquipmentItem>(FVector(0), FRotator(0), SpawnParams);
+		item06->SetItemCode(EEquipmentItemCode::Ford);
+
+		ARoguelike3DCharacter* pPlayerPawn = Cast<ARoguelike3DCharacter>(UGameplayStatics::GetPlayerPawn(this, 0));
+		pPlayerPawn->GetInventory()->AddItem(item00);
+		pPlayerPawn->GetInventory()->AddItem(item01);
+		pPlayerPawn->GetInventory()->AddItem(item02);
+		pPlayerPawn->GetInventory()->AddItem(item03);
+		pPlayerPawn->GetInventory()->AddItem(item04);
+		pPlayerPawn->GetInventory()->AddItem(item05);
+		pPlayerPawn->GetInventory()->AddItem(item06);
+	}	
 }
 
 UChapterAssetManager* AChapterGameMode::GetChapterAssetManager() const
@@ -83,5 +133,19 @@ void AChapterGameMode::VisibleBigmap(bool bVisibility)
 	else
 	{
 		m_bigmapWidget->RemoveFromViewport();
+	}
+}
+
+void AChapterGameMode::FlipInventory()
+{
+	if (m_flipInventory)
+	{
+		m_inventoryWidget->RemoveFromViewport();
+		m_flipInventory = false;
+	}
+	else
+	{
+		m_inventoryWidget->AddToViewport();
+		m_flipInventory = true;
 	}
 }

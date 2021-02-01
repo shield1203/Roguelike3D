@@ -3,9 +3,12 @@
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
+#include "Components/SkeletalMeshComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Inventory.h"
+#include "EquipmentItem.h"
 
 ARoguelike3DCharacter::ARoguelike3DCharacter()
 {
@@ -29,9 +32,15 @@ ARoguelike3DCharacter::ARoguelike3DCharacter()
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); 
 	FollowCamera->bUsePawnControlRotation = false; 
 
+	m_inventory = CreateDefaultSubobject<UInventory>(TEXT("Character_Inventory"));
+
 	//////
-	m_ability.fMaxHP = 100.f;
-	m_ability.fHP = m_ability.fMaxHP;
+	m_ability.fMaxHP = 200.f;
+	m_ability.fHP = 100.f;
+	m_ability.fAttackPower = 10.f;
+	m_ability.fDefensivPower = 0.f;
+
+	/////
 }
 
 void ARoguelike3DCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -47,19 +56,40 @@ void ARoguelike3DCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-int32 ARoguelike3DCharacter::GetPlayerCurHP() const
+int32 ARoguelike3DCharacter::GetPlayerAttackPower()
 {
+	return m_ability.fAttackPower + m_inventory->GetWeaponValue();
+}
+
+
+int32 ARoguelike3DCharacter::GetPlayerDefensivePower()
+{
+	return m_ability.fDefensivPower + m_inventory->GetArmorValue();
+}
+
+int32 ARoguelike3DCharacter::GetPlayerCurHP()
+{
+	if (m_ability.fHP > GetPlayerMaxHP()) m_ability.fHP = m_ability.fMaxHP;
 	return m_ability.fHP;
 }
 
-int32 ARoguelike3DCharacter::GetPlayerMaxHP() const
+int32 ARoguelike3DCharacter::GetPlayerMaxHP()
 {
-	return m_ability.fMaxHP;
+	return m_ability.fMaxHP + m_inventory->GetAaccessoryValue();
 }
 
-float ARoguelike3DCharacter::GetPlayerPercentHP() const
+float ARoguelike3DCharacter::GetPlayerPercentHP()
 {
-	return m_ability.fHP / m_ability.fMaxHP;
+	float fCurHP = GetPlayerCurHP();
+	float fMaxHP = GetPlayerMaxHP();
+
+	return fCurHP / fMaxHP;
+}
+
+void ARoguelike3DCharacter::RecoveryHP(float value)
+{
+	m_ability.fHP += value;
+	if (m_ability.fHP > m_ability.fMaxHP) m_ability.fHP = m_ability.fMaxHP;
 }
 
 void ARoguelike3DCharacter::MoveForward(float Value)

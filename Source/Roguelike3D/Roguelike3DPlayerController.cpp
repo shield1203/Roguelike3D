@@ -22,6 +22,8 @@ void ARoguelike3DPlayerController::SetupInputComponent()
 
 	InputComponent->BindAction("BigMap", IE_Pressed, this, &ARoguelike3DPlayerController::OnOpenBigmap);
 	InputComponent->BindAction("BigMap", IE_Released, this, &ARoguelike3DPlayerController::OnCloseBigmap);
+
+	InputComponent->BindAction("InventoryUI", IE_Pressed, this, &ARoguelike3DPlayerController::OnFlipInventory);
 }
 
 void ARoguelike3DPlayerController::SetPlayerRotation()
@@ -64,6 +66,19 @@ void ARoguelike3DPlayerController::OnCloseBigmap()
 		if (pGameMode)
 		{
 			pGameMode->VisibleBigmap(false);
+		}
+	}
+}
+
+void ARoguelike3DPlayerController::OnFlipInventory()
+{
+	UWorld* pWorld = GetWorld();
+	if (pWorld)
+	{
+		AChapterGameMode* pGameMode = Cast<AChapterGameMode>(UGameplayStatics::GetGameMode(pWorld));
+		if (pGameMode)
+		{
+			pGameMode->FlipInventory();
 		}
 	}
 }

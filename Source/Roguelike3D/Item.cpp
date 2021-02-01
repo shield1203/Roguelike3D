@@ -16,6 +16,7 @@ AItem::AItem()
 
 	m_staticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ItemStaticMeshComponent"));
 	m_staticMeshComponent->SetupAttachment(m_collisionComponent);
+	m_staticMeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 void AItem::BeginPlay()

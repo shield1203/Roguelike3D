@@ -4,15 +4,30 @@
 
 UChapterAssetManager::UChapterAssetManager()
 {
-	TArray<FString> strAssetPath;
-	strAssetPath.Add(TEXT("/Game/Else/Mesh/coin"));
-	strAssetPath.Add(TEXT("/Game/PolygonCity/Meshes/Props/SM_Prop_LargeSign_Milkshake_01"));
-	strAssetPath.Add(TEXT("/Game/PolygonCity/Meshes/Props/SM_Prop_LargeSign_Donut_01"));
+	TArray<FString> strConsumptionItemAssetPath;
+	strConsumptionItemAssetPath.Add(TEXT("/Game/Else/Mesh/coin"));
+	strConsumptionItemAssetPath.Add(TEXT("/Game/PolygonCity/Meshes/Props/SM_Prop_LargeSign_Milkshake_01"));
+	strConsumptionItemAssetPath.Add(TEXT("/Game/PolygonCity/Meshes/Props/SM_Prop_LargeSign_Donut_01"));
 
-	for (auto consumptionItemPath : strAssetPath)
+	for (auto consumptionItemPath : strConsumptionItemAssetPath)
 	{
 		ConstructorHelpers::FObjectFinder<UStaticMesh> ConsumptionItem(*consumptionItemPath);
 		m_consumptionItemStaticMesh.Add(ConsumptionItem.Object);
+	}
+
+	TArray<FString> strEquipmentAssetPath;
+	strEquipmentAssetPath.Add(TEXT("/Game/PolygonTown/Meshes/Items/SM_Item_Blade_01"));
+	strEquipmentAssetPath.Add(TEXT("/Game/PolygonTown/Meshes/Items/SM_Item_Screwdriver_01"));
+	strEquipmentAssetPath.Add(TEXT("/Game/PolygonTown/Meshes/Items/SM_Item_Spanner_01"));
+	strEquipmentAssetPath.Add(TEXT("/Game/PolygonTown/Meshes/Props/SM_Prop_Pool_Float_Ring_01"));
+	strEquipmentAssetPath.Add(TEXT("/Game/PolygonTown/Meshes/Props/SM_Prop_Pool_Float_Ring_04"));
+	strEquipmentAssetPath.Add(TEXT("/Game/PolygonTown/Meshes/Props/SM_Prop_RubbishBin_01_Lid"));
+	strEquipmentAssetPath.Add(TEXT("/Game/AutomotiveMaterials/LevelAssets/PreviewMeshes/SM_Shaderball"));
+	
+	for (auto equipmentItemPath : strEquipmentAssetPath)
+	{
+		ConstructorHelpers::FObjectFinder<UStaticMesh> EquipmentItem(*equipmentItemPath);
+		m_equipmentItemStaticMesh.Add(EquipmentItem.Object);
 	}
 }
 
