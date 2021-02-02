@@ -68,8 +68,10 @@ bool UInventory::SpendCoin(int32 value)
 void UInventory::Equip(AItem* newItem, USkeletalMeshComponent* pPlayerMesh)
 {
 	AEquipmentItem* pEquipmentItem = Cast<AEquipmentItem>(newItem);
-	pEquipmentItem->SetEquip(true);
 	FEquipmentItemData newItemData = pEquipmentItem->GetItemData();
+
+	pEquipmentItem->SetEquip(true);
+	pEquipmentItem->AttachToComponent(pPlayerMesh, FAttachmentTransformRules::KeepRelativeTransform, newItemData.SocketName);
 
 	switch (newItemData.Part)
 	{
@@ -78,10 +80,15 @@ void UInventory::Equip(AItem* newItem, USkeletalMeshComponent* pPlayerMesh)
 		if (m_weapon)
 		{
 			AEquipmentItem* pOldEquipmentItem = Cast<AEquipmentItem>(m_weapon);
-			pOldEquipmentItem->SetEquip(false);
-			pOldEquipmentItem->AttachToComponent(pPlayerMesh, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), pOldEquipmentItem->GetSocketName());
-			m_items.Add(m_weapon); 
+			RemoveItem(newItem);
+			AddItem(pOldEquipmentItem);
 		}
+		else
+		{
+			m_items.Remove(newItem);
+			m_items.Add(nullptr);
+		}
+
 		m_weapon = newItem;
 		break;
 	}
@@ -91,9 +98,15 @@ void UInventory::Equip(AItem* newItem, USkeletalMeshComponent* pPlayerMesh)
 		{
 			AEquipmentItem* pOldEquipmentItem = Cast<AEquipmentItem>(m_armor);
 			pOldEquipmentItem->SetEquip(false);
-			pOldEquipmentItem->AttachToComponent(pPlayerMesh, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), pOldEquipmentItem->GetSocketName());
-			m_items.Add(m_armor);
+			RemoveItem(newItem);
+			AddItem(pOldEquipmentItem);
 		}
+		else
+		{
+			m_items.Remove(newItem);
+			m_items.Add(nullptr);
+		}
+
 		m_armor = newItem; 
 		break;
 	}
@@ -103,15 +116,19 @@ void UInventory::Equip(AItem* newItem, USkeletalMeshComponent* pPlayerMesh)
 		{
 			AEquipmentItem* pOldEquipmentItem = Cast<AEquipmentItem>(m_aaccessory);
 			pOldEquipmentItem->SetEquip(false);
-			pOldEquipmentItem->AttachToComponent(pPlayerMesh, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), pOldEquipmentItem->GetSocketName());
-			m_items.Add(m_aaccessory);
+			RemoveItem(newItem);
+			AddItem(pOldEquipmentItem);
 		}
+		else
+		{
+			m_items.Remove(newItem);
+			m_items.Add(nullptr);
+		}
+
 		m_aaccessory = newItem;
 		break;
 	}
 	}
-
-	m_items.Remove(newItem);
 
 	m_listUpdate = true;
 }
@@ -123,6 +140,18 @@ void UInventory::AddItem(AItem* newItem)
 		if (inventorySlot == nullptr)
 		{
 			inventorySlot = newItem;
+			break;
+		}
+	}
+}
+
+void UInventory::RemoveItem(AItem* newItem)
+{
+	for (auto& inventorySlot : m_items)
+	{
+		if (inventorySlot == newItem)
+		{
+			inventorySlot = nullptr;
 			break;
 		}
 	}

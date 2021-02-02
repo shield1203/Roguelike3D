@@ -72,4 +72,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void AddItem(AItem* newItem);
+
+	UFUNCTION(BlueprintCallable)
+	void RemoveItem(AItem* newItem);
 };

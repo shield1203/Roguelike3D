@@ -41,6 +41,7 @@ void AEquipmentItem::LoadItemData()
 	m_itemData.Part = pItemData->Part;
 	m_itemData.Value = pItemData->Value;
 	m_itemData.Name = pItemData->Name;
+	m_itemData.SocketName = pItemData->SocketName;
 	m_itemData.Explanation = pItemData->Explanation;
 	m_thumbnail = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *pItemData->ThumbnailPath));
 
@@ -51,11 +52,9 @@ void AEquipmentItem::LoadItemData()
 		if (pGameMode)
 		{
 			m_staticMeshComponent->SetStaticMesh(pGameMode->GetChapterAssetManager()->GetEquipmentItemMesh(static_cast<uint8>(m_itemCode)));
-			m_staticMeshComponent->SetVisibility(true);
+			m_staticMeshComponent->SetVisibility(false);
 		}
 	}
-
-	UE_LOG(LogTemp, Warning, TEXT("%d"), m_itemData.ItemCode);
 }
 
 void AEquipmentItem::SetEquip(bool bEquip)
