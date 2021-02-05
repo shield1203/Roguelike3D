@@ -21,6 +21,7 @@ void ARoguelike3DPlayerController::SetupInputComponent()
 	Super::SetupInputComponent();
 
 	InputComponent->BindAction("StartFire", IE_Pressed, this, &ARoguelike3DPlayerController::OnFire);
+	InputComponent->BindAction("Teleport", IE_Pressed, this, &ARoguelike3DPlayerController::OnTeleport);
 
 	InputComponent->BindAction("BigMap", IE_Pressed, this, &ARoguelike3DPlayerController::OnOpenBigmap);
 	InputComponent->BindAction("BigMap", IE_Released, this, &ARoguelike3DPlayerController::OnCloseBigmap);
@@ -36,7 +37,7 @@ void ARoguelike3DPlayerController::SetPlayerRotation()
 	if (Hit.bBlockingHit)
 	{
 		ARoguelike3DCharacter* pPlayerPawn = Cast<ARoguelike3DCharacter>(GetPawn());
-		if (pPlayerPawn)
+		if (pPlayerPawn && !pPlayerPawn->IsSkilling())
 		{
 			float fRadian = FMath::Atan2(Hit.ImpactPoint.Y - pPlayerPawn->GetActorLocation().Y, Hit.ImpactPoint.X - pPlayerPawn->GetActorLocation().X);
 			float fDegree = FMath::RadiansToDegrees(fRadian);
@@ -49,9 +50,24 @@ void ARoguelike3DPlayerController::SetPlayerRotation()
 void ARoguelike3DPlayerController::OnFire()
 {
 	ARoguelike3DCharacter* pPlayerPawn = Cast<ARoguelike3DCharacter>(GetPawn());
-	if (pPlayerPawn)
+	if (pPlayerPawn && !pPlayerPawn->IsSkilling())
 	{
 		pPlayerPawn->StartFire();
+	}
+}
+
+void ARoguelike3DPlayerController::OnTeleport()
+{
+	ARoguelike3DCharacter* pPlayerPawn = Cast<ARoguelike3DCharacter>(GetPawn());
+	if (pPlayerPawn && !pPlayerPawn->IsSkilling())
+	{
+		FHitResult Hit;
+		GetHitResultUnderCursor(ECC_Visibility, false, Hit);
+
+		if (Hit.bBlockingHit)
+		{
+			pPlayerPawn->StartTeleport(Hit.ImpactPoint);
+		}
 	}
 }
 

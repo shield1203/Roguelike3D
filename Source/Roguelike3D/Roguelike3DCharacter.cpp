@@ -15,6 +15,7 @@
 ARoguelike3DCharacter::ARoguelike3DCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
+	m_skilling = false;
 
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 
@@ -59,6 +60,7 @@ void ARoguelike3DCharacter::PostInitializeComponents()
 
 	m_characterAnimInstance = Cast<UCharacterAnimInstance>(GetMesh()->GetAnimInstance());
 	m_characterAnimInstance->OnFire.BindUFunction(this, FName("Fire"));
+	m_characterAnimInstance->OnTeleport.BindUFunction(this, FName("Teleport"));
 }
 
 void ARoguelike3DCharacter::Tick(float DeltaTime)
@@ -102,8 +104,15 @@ void ARoguelike3DCharacter::RecoveryHP(float value)
 	if (m_ability.fHP > m_ability.fMaxHP) m_ability.fHP = m_ability.fMaxHP;
 }
 
+bool ARoguelike3DCharacter::IsSkilling() const
+{
+	return m_skilling;
+}
+
 void ARoguelike3DCharacter::MoveForward(float Value)
 {
+	if (m_skilling) return;
+
 	if ((Controller != NULL) && (Value != 0.0f))
 	{
 		const FRotator Rotation = Controller->GetControlRotation();
@@ -116,6 +125,8 @@ void ARoguelike3DCharacter::MoveForward(float Value)
 
 void ARoguelike3DCharacter::MoveRight(float Value)
 {
+	if (m_skilling) return;
+
 	if ( (Controller != NULL) && (Value != 0.0f) )
 	{
 		const FRotator Rotation = Controller->GetControlRotation();
@@ -149,4 +160,19 @@ void ARoguelike3DCharacter::Fire()
 			pProjectile->InitializePlayerProjectile(GetActorRotation().Vector(), pWeapon->GetItemCode(), GetPlayerAttackPower());
 		}
 	}
+}
+
+void ARoguelike3DCharacter::StartTeleport(FVector TeleportLocation)
+{
+	m_teleportLocation = TeleportLocation;
+	m_teleportLocation.Z = GetActorLocation().Z;
+
+	m_skilling = true;
+	m_characterAnimInstance->StartTeleport();
+}
+
+void ARoguelike3DCharacter::Teleport()
+{
+	SetActorLocation(m_teleportLocation, true);
+	m_skilling = false;
 }

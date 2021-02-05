@@ -6,6 +6,7 @@
 #include "CharacterAnimInstance.generated.h"
 
 DECLARE_DELEGATE(FOnFireDelegate);
+DECLARE_DELEGATE(FOnTeleportDelegate);
 
 UCLASS()
 class ROGUELIKE3D_API UCharacterAnimInstance : public UAnimInstance
@@ -17,15 +18,12 @@ protected:
 	UAnimMontage* m_attackMontage;
 
 	UPROPERTY()
-	class ARoguelike3DCharacter* m_character;
+	UAnimMontage* m_teleportMontage;
 
-	UPROPERTY()
-	AEquipmentItem* m_characterWeapon;
-
-	UPROPERTY()
-	float m_attackPower;
 public:
 	FOnFireDelegate OnFire;
+
+	FOnTeleportDelegate OnTeleport;
 
 public:
 	UCharacterAnimInstance();
@@ -35,4 +33,10 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void AnimNotify_Fire();
+
+	UFUNCTION(BlueprintCallable)
+	void StartTeleport();
+
+	UFUNCTION(BlueprintCallable)
+	void AnimNotify_Teleport();
 };

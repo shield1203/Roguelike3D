@@ -21,6 +21,8 @@ public:
 
 	void OnFire();
 
+	void OnTeleport();
+
 	void OnOpenBigmap();
 
 	void OnCloseBigmap();

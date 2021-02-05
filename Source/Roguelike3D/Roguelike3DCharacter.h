@@ -50,6 +50,13 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Character, meta = (AllowPrivateAccess = "true"))
 	class UInventory* m_inventory;
 
+	// Skill
+	UPROPERTY()
+	bool m_skilling;
+
+	UPROPERTY()
+	FVector m_teleportLocation;
+
 public:
 	ARoguelike3DCharacter();
 
@@ -89,9 +96,19 @@ public:
 
 	void RecoveryHP(float value);
 
+	// Action
+	UFUNCTION(BlueprintCallable)
+	bool IsSkilling() const;
+
 	UFUNCTION(BlueprintCallable)
 	void StartFire();
 
 	UFUNCTION(BlueprintCallable)
 	void Fire();
+
+	UFUNCTION(BlueprintCallable)
+	void StartTeleport(FVector TeleportLocation);
+
+	UFUNCTION(BlueprintCallable)
+	void Teleport();
 };

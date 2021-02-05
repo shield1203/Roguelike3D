@@ -8,6 +8,12 @@ UCharacterAnimInstance::UCharacterAnimInstance()
 	{
 		m_attackMontage = AttackMontage.Object;
 	}
+
+	ConstructorHelpers::FObjectFinder<UAnimMontage> TeleportMontage(TEXT("AnimMontage'/Game/Animations/Player/Teleport_Montage.Teleport_Montage'"));
+	if (TeleportMontage.Succeeded())
+	{
+		m_teleportMontage = TeleportMontage.Object;
+	}
 }
 
 void UCharacterAnimInstance::StartFire()
@@ -17,5 +23,15 @@ void UCharacterAnimInstance::StartFire()
 
 void UCharacterAnimInstance::AnimNotify_Fire()
 {
-	OnFire.Execute();
+	OnFire.ExecuteIfBound();
+}
+
+void UCharacterAnimInstance::StartTeleport()
+{
+	Montage_Play(m_teleportMontage, 1.0f);
+}
+
+void UCharacterAnimInstance::AnimNotify_Teleport()
+{
+	OnTeleport.ExecuteIfBound();
 }
