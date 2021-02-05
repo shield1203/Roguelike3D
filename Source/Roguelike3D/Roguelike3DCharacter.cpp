@@ -7,8 +7,10 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "CharacterAnimInstance.h"
 #include "Inventory.h"
 #include "EquipmentItem.h"
+#include "PlayerProjectile.h"
 
 ARoguelike3DCharacter::ARoguelike3DCharacter()
 {
@@ -49,6 +51,14 @@ void ARoguelike3DCharacter::SetupPlayerInputComponent(class UInputComponent* Pla
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &ARoguelike3DCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ARoguelike3DCharacter::MoveRight);
+}
+
+void ARoguelike3DCharacter::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	m_characterAnimInstance = Cast<UCharacterAnimInstance>(GetMesh()->GetAnimInstance());
+	m_characterAnimInstance->OnFire.BindUFunction(this, FName("Fire"));
 }
 
 void ARoguelike3DCharacter::Tick(float DeltaTime)
@@ -114,5 +124,29 @@ void ARoguelike3DCharacter::MoveRight(float Value)
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 	
 		AddMovementInput(Direction, Value + m_ability.fSpeed);
+	}
+}
+
+void ARoguelike3DCharacter::StartFire()
+{
+	m_characterAnimInstance->StartFire();
+}
+
+void ARoguelike3DCharacter::Fire()
+{
+	AEquipmentItem* pWeapon = Cast<AEquipmentItem>(m_inventory->GetWeapon());
+	if (!pWeapon) return;
+
+	UWorld* pWorld = GetWorld();
+	if (pWorld)
+	{
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.Owner = this;
+
+		APlayerProjectile* pProjectile = pWorld->SpawnActor<APlayerProjectile>(m_inventory->GetWeapon()->GetActorLocation(), GetActorRotation(), SpawnParams);
+		if (pProjectile)
+		{
+			pProjectile->InitializePlayerProjectile(GetActorRotation().Vector(), pWeapon->GetItemCode(), GetPlayerAttackPower());
+		}
 	}
 }

@@ -20,6 +20,8 @@ void ARoguelike3DPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 
+	InputComponent->BindAction("StartFire", IE_Pressed, this, &ARoguelike3DPlayerController::OnFire);
+
 	InputComponent->BindAction("BigMap", IE_Pressed, this, &ARoguelike3DPlayerController::OnOpenBigmap);
 	InputComponent->BindAction("BigMap", IE_Released, this, &ARoguelike3DPlayerController::OnCloseBigmap);
 
@@ -41,6 +43,15 @@ void ARoguelike3DPlayerController::SetPlayerRotation()
 
 			pPlayerPawn->SetActorRotation(FRotator(0, fDegree, 0));
 		}
+	}
+}
+
+void ARoguelike3DPlayerController::OnFire()
+{
+	ARoguelike3DCharacter* pPlayerPawn = Cast<ARoguelike3DCharacter>(GetPawn());
+	if (pPlayerPawn)
+	{
+		pPlayerPawn->StartFire();
 	}
 }
 

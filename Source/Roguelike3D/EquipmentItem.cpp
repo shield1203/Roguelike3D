@@ -76,6 +76,11 @@ FEquipmentItemData AEquipmentItem::GetItemData() const
 	return m_itemData;
 }
 
+EEquipmentItemCode AEquipmentItem::GetItemCode() const
+{
+	return m_itemCode;
+}
+
 class UTexture2D* AEquipmentItem::GetThumbnail() const
 {
 	return m_thumbnail;

@@ -87,6 +87,9 @@ public:
 	FEquipmentItemData GetItemData() const;
 
 	UFUNCTION(BlueprintCallable)
+	EEquipmentItemCode GetItemCode() const;
+
+	UFUNCTION(BlueprintCallable)
 	class UTexture2D* GetThumbnail() const;
 
 	UFUNCTION(BlueprintCallable)

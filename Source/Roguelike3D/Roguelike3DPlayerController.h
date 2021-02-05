@@ -19,6 +19,8 @@ protected:
 public:
 	ARoguelike3DPlayerController();
 
+	void OnFire();
+
 	void OnOpenBigmap();
 
 	void OnCloseBigmap();
