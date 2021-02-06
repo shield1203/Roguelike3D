@@ -7,6 +7,7 @@
 
 DECLARE_DELEGATE(FOnFireDelegate);
 DECLARE_DELEGATE(FOnTeleportDelegate);
+DECLARE_DELEGATE(FOnTripleFireDelegate);
 
 UCLASS()
 class ROGUELIKE3D_API UCharacterAnimInstance : public UAnimInstance
@@ -20,10 +21,15 @@ protected:
 	UPROPERTY()
 	UAnimMontage* m_teleportMontage;
 
+	UPROPERTY()
+	UAnimMontage* m_tripleFireMontage;
+
 public:
 	FOnFireDelegate OnFire;
 
 	FOnTeleportDelegate OnTeleport;
+
+	FOnTripleFireDelegate OnTripleFire;
 
 public:
 	UCharacterAnimInstance();
@@ -39,4 +45,10 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void AnimNotify_Teleport();
+
+	UFUNCTION(BlueprintCallable)
+	void StartTripleFire();
+
+	UFUNCTION(BlueprintCallable)
+	void AnimNotify_TripleFire();
 };

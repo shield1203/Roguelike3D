@@ -23,6 +23,8 @@ public:
 
 	void OnTeleport();
 
+	void OnTripleFire();
+
 	void OnOpenBigmap();
 
 	void OnCloseBigmap();

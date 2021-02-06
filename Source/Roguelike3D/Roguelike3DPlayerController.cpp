@@ -22,6 +22,7 @@ void ARoguelike3DPlayerController::SetupInputComponent()
 
 	InputComponent->BindAction("StartFire", IE_Pressed, this, &ARoguelike3DPlayerController::OnFire);
 	InputComponent->BindAction("Teleport", IE_Pressed, this, &ARoguelike3DPlayerController::OnTeleport);
+	InputComponent->BindAction("TripleFire", IE_Pressed, this, &ARoguelike3DPlayerController::OnTripleFire);
 
 	InputComponent->BindAction("BigMap", IE_Pressed, this, &ARoguelike3DPlayerController::OnOpenBigmap);
 	InputComponent->BindAction("BigMap", IE_Released, this, &ARoguelike3DPlayerController::OnCloseBigmap);
@@ -68,6 +69,15 @@ void ARoguelike3DPlayerController::OnTeleport()
 		{
 			pPlayerPawn->StartTeleport(Hit.ImpactPoint);
 		}
+	}
+}
+
+void ARoguelike3DPlayerController::OnTripleFire()
+{
+	ARoguelike3DCharacter* pPlayerPawn = Cast<ARoguelike3DCharacter>(GetPawn());
+	if (pPlayerPawn && !pPlayerPawn->IsSkilling())
+	{
+		pPlayerPawn->StartTripleFire();
 	}
 }
 

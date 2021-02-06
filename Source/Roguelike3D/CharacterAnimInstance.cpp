@@ -14,6 +14,12 @@ UCharacterAnimInstance::UCharacterAnimInstance()
 	{
 		m_teleportMontage = TeleportMontage.Object;
 	}
+
+	ConstructorHelpers::FObjectFinder<UAnimMontage> TripleFireMontage(TEXT("AnimMontage'/Game/Animations/Player/TripleFire_Montage.TripleFire_Montage'"));
+	if (TripleFireMontage.Succeeded())
+	{
+		m_tripleFireMontage = TripleFireMontage.Object;
+	}
 }
 
 void UCharacterAnimInstance::StartFire()
@@ -34,4 +40,14 @@ void UCharacterAnimInstance::StartTeleport()
 void UCharacterAnimInstance::AnimNotify_Teleport()
 {
 	OnTeleport.ExecuteIfBound();
+}
+
+void UCharacterAnimInstance::StartTripleFire()
+{
+	Montage_Play(m_tripleFireMontage, 1.0f);
+}
+
+void UCharacterAnimInstance::AnimNotify_TripleFire()
+{
+	OnTripleFire.ExecuteIfBound();
 }

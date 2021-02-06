@@ -111,4 +111,10 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void Teleport();
+
+	UFUNCTION(BlueprintCallable)
+	void StartTripleFire();
+
+	UFUNCTION(BlueprintCallable)
+	void TripleFire();
 };

@@ -16,7 +16,7 @@ APlayerProjectile::APlayerProjectile()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	m_sceneCompoent = CreateDefaultSubobject<USceneComponent>(TEXT("ItemSceneComponent"));
+	m_sceneCompoent = CreateDefaultSubobject<USceneComponent>(TEXT("PlayerProjetileSceneComponent"));
 	RootComponent = m_sceneCompoent;
 
 	m_collisionComponent = CreateDefaultSubobject<USphereComponent>(TEXT("PlayerProjectileCollision"));
@@ -90,7 +90,6 @@ void APlayerProjectile::OnProjectileBeginOverlap(class UPrimitiveComponent* Over
 	if (pPlayer || pItem || pProjectile) return;
 
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), m_particleSystem, GetActorLocation(), GetActorRotation());
-	UE_LOG(LogTemp, Warning, TEXT("collisionActor : %s"), *OtherActor->GetName());
 
 	Destroy();
 }

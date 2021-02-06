@@ -11,6 +11,7 @@
 #include "Inventory.h"
 #include "EquipmentItem.h"
 #include "PlayerProjectile.h"
+#include "SkillProjetile.h"
 
 ARoguelike3DCharacter::ARoguelike3DCharacter()
 {
@@ -61,6 +62,7 @@ void ARoguelike3DCharacter::PostInitializeComponents()
 	m_characterAnimInstance = Cast<UCharacterAnimInstance>(GetMesh()->GetAnimInstance());
 	m_characterAnimInstance->OnFire.BindUFunction(this, FName("Fire"));
 	m_characterAnimInstance->OnTeleport.BindUFunction(this, FName("Teleport"));
+	m_characterAnimInstance->OnTripleFire.BindUFunction(this, FName("TripleFire"));
 }
 
 void ARoguelike3DCharacter::Tick(float DeltaTime)
@@ -175,4 +177,36 @@ void ARoguelike3DCharacter::Teleport()
 {
 	SetActorLocation(m_teleportLocation, true);
 	m_skilling = false;
+}
+
+void ARoguelike3DCharacter::StartTripleFire()
+{
+	m_skilling = true;
+	m_characterAnimInstance->StartTripleFire();
+}
+
+void ARoguelike3DCharacter::TripleFire()
+{
+	m_skilling = false;
+
+	AEquipmentItem* pWeapon = Cast<AEquipmentItem>(m_inventory->GetWeapon());
+	if (!pWeapon) return;
+
+	UWorld* pWorld = GetWorld();
+	if (pWorld)
+	{
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.Owner = this;
+
+		for (int count = -1; count < 2; count++)
+		{
+			ASkillProjetile* pProjectile = pWorld->SpawnActor<ASkillProjetile>(m_inventory->GetWeapon()->GetActorLocation(), GetActorRotation(), SpawnParams);
+			if (pProjectile)
+			{
+				FRotator projectileRotation = GetActorRotation();
+				projectileRotation.Yaw += (count * 30);
+				pProjectile->InitializeProjectile(projectileRotation.Vector(), GetPlayerAttackPower());
+			}
+		}
+	}
 }
