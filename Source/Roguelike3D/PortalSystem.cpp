@@ -119,6 +119,19 @@ void UPortalSystem::SetArrivalPortals()
 	}
 }
 
+void UPortalSystem::StartActivePortals(int32 mapNumber)
+{
+	UWorld* world = GetWorld();
+
+	for (TActorIterator<APortal> portal(world); portal; ++portal)
+	{
+		if (portal->GetMapNumber() == mapNumber)
+		{
+			portal->SetActivation(true);
+		}
+	}
+}
+
 APortal* UPortalSystem::GetArrivalPortal(int32 mapNumber, int32 portalNumber)
 {
 	APortal* pArrivalPortal = nullptr;

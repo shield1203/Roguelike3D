@@ -69,5 +69,7 @@ public:
 
 	void SetArrivalPortals();
 
+	void StartActivePortals(int32 mapNumber);
+
 	class APortal* GetArrivalPortal(int32 mapNumber, int32 portalNumber);
 };

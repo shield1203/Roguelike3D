@@ -55,6 +55,7 @@ void AChapterGameMode::StartPlay()
 	Super::StartPlay();
 
 	m_portalSystem->SetRandomRoguelikeMap();
+	m_portalSystem->StartActivePortals(0);
 
 	m_mainWidget->AddToViewport();
 

@@ -15,8 +15,6 @@ APortal::APortal()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	m_activation = true;
-
 	InputComponent = CreateDefaultSubobject<UInputComponent>(TEXT("PortalInputComponent"));
 	InputComponent->BindKey(EKeys::F, EInputEvent::IE_Pressed, this, &APortal::OnPressButton);
 
@@ -30,6 +28,7 @@ APortal::APortal()
 	{
 		m_staticMeshComponent->SetStaticMesh(PortalVisualAsset.Object);
 	}
+	m_staticMeshComponent->CreateDynamicMaterialInstance(1);
 
 	m_collisionComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("PortalCollisionComponent"));
 	m_collisionComponent->SetupAttachment(RootComponent);
@@ -59,6 +58,8 @@ APortal::APortal()
 	m_buttonWidgetComponent->SetRelativeRotation(FRotator(90.0f, 0.0f, 0.0f));
 	m_buttonWidgetComponent->SetRelativeLocation(FVector(-40.0f, 0.0f, 51.0f));
 	m_buttonWidgetComponent->RegisterComponent();
+
+	SetActivation(false);
 }
 
 void APortal::BeginPlay()
@@ -81,12 +82,28 @@ void APortal::SetArrivalPortal(APortal* ArrivalPortal, int32 xPos, int32 yPos)
 	m_arrivalPortal = ArrivalPortal;
 	m_mapXPos = xPos;
 	m_mapYPos = yPos;
-
+	
 	if (m_arrivalPortal == nullptr) Destroy();
+}
+
+void APortal::SetActivation(bool bActivation)
+{
+	m_activation = bActivation;
+
+	if (m_activation)
+	{
+		m_staticMeshComponent->SetVectorParameterValueOnMaterials(TEXT("Color"), FVector(1.f, 0.857146f, 0));
+	}
+	else
+	{
+		m_staticMeshComponent->SetVectorParameterValueOnMaterials(TEXT("Color"), FVector(1.f, 0, 0));
+	}
 }
 
 void APortal::OnPlayerBeginOverlap(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	if (!m_activation) return;
+
 	ARoguelike3DCharacter* pPlayerPawn = Cast<ARoguelike3DCharacter>(OtherActor);
 
 	if (pPlayerPawn != nullptr)
@@ -113,6 +130,8 @@ void APortal::OnPlayerEndOverlap(class UPrimitiveComponent* OverlappedComp, clas
 
 void APortal::OnPressButton()
 {
+	if (!m_activation) return;
+
 	ARoguelike3DCharacter* pPlayer = Cast<ARoguelike3DCharacter>(UGameplayStatics::GetPlayerPawn(this, 0));
 	if (pPlayer != nullptr)
 	{
