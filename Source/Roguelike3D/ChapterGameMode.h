@@ -39,6 +39,9 @@ private:
 	UPROPERTY()
 	int32 m_curMapNumber;
 
+	UPROPERTY()
+	TMap<int32, int32> m_enemyCount;
+
 protected:
 	virtual void StartPlay();
 
@@ -62,4 +65,8 @@ public:
 	void VisibleBigmap(bool bVisibility);
 
 	void FlipInventory();
+
+	void AddEnemyCount(int32 mapNumber);
+
+	void RemoveEnemy(int32 mapNumber);
 };

@@ -150,3 +150,28 @@ void AChapterGameMode::FlipInventory()
 		m_flipInventory = true;
 	}
 }
+
+void AChapterGameMode::AddEnemyCount(int32 mapNumber)
+{
+	if (m_enemyCount.Contains(mapNumber))
+	{
+		m_enemyCount[mapNumber]++;
+	}
+	else
+	{
+		m_enemyCount.Add(mapNumber);
+		m_enemyCount[mapNumber] = 1;
+	}
+}
+
+void AChapterGameMode::RemoveEnemy(int32 mapNumber)
+{
+	if (!m_enemyCount.Contains(mapNumber)) return;
+
+	m_enemyCount[mapNumber]--;
+
+	if (m_enemyCount[mapNumber] <= 0)
+	{
+		m_portalSystem->StartActivePortals(mapNumber);
+	}
+}

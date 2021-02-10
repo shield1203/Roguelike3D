@@ -11,6 +11,10 @@ class ROGUELIKE3D_API AEnemySpawnPlace : public AActor
 	GENERATED_BODY()
 	
 private:
+	bool m_spawnEnemy;
+
+	bool m_spawnFinished;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = EnemySpawnPlace, meta = (AllowPrivateAccess = "true"))
 	EEnemyCode m_spawnEnemyCode;
 
@@ -26,6 +30,8 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class UParticleSystemComponent* m_particleComponent;
 
+	FTimerHandle m_enemySpawnTimerHandle;
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -36,4 +42,6 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void OnPlayerInRange(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	void EnemySpawnFinished();
 };
