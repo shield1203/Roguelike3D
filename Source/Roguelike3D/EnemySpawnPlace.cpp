@@ -2,9 +2,12 @@
 #include "Components/SceneComponent.h"
 #include "Components/SphereComponent.h"
 #include "Particles/ParticleSystemComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "TimerManager.h"
 #include "Roguelike3DCharacter.h"
 #include "EnemyBase.h"
+#include "ChapterGameMode.h"
+#include "ChapterAssetManager.h"
 
 AEnemySpawnPlace::AEnemySpawnPlace()
 {
@@ -51,8 +54,22 @@ void AEnemySpawnPlace::OnPlayerInRange(class UPrimitiveComponent* OverlappedComp
 	if (pPlayerPawn != nullptr && !m_spawnEnemy)
 	{
 		m_spawnEnemy = true;
-		m_particleComponent->SetActive(true);
 		GetWorldTimerManager().SetTimer(m_enemySpawnTimerHandle, this, &AEnemySpawnPlace::EnemySpawnFinished, 2.5f, true);
+
+		UWorld* pWorld = GetWorld();
+		if (pWorld)
+		{
+			AChapterGameMode* pGameMode = Cast<AChapterGameMode>(UGameplayStatics::GetGameMode(pWorld));
+			if (pGameMode)
+			{
+				m_particleComponent->SetActive(true);
+
+				FActorSpawnParameters SpawnParams;
+				SpawnParams.Owner = this;
+				SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+				pWorld->SpawnActor<AEnemyBase>(pGameMode->GetChapterAssetManager()->GetEnemyBlueprintClass(static_cast<uint8>(m_spawnEnemyCode)), GetActorLocation(), GetActorRotation(), SpawnParams);
+			}
+		}
 	}
 }
 

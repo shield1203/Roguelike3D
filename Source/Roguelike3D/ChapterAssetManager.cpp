@@ -1,6 +1,7 @@
 #include "ChapterAssetManager.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Components/StaticMeshComponent.h"
+#include "EnemyBase.h"
 
 UChapterAssetManager::UChapterAssetManager()
 {
@@ -29,6 +30,20 @@ UChapterAssetManager::UChapterAssetManager()
 		ConstructorHelpers::FObjectFinder<UStaticMesh> EquipmentItem(*equipmentItemPath);
 		m_equipmentItemStaticMesh.Add(EquipmentItem.Object);
 	}
+
+	TArray<FString> strEnemyBlueprintPath;
+	strEnemyBlueprintPath.Add(TEXT("/Game/Blueprints/Enemy/Grim/BP_Grim_White"));
+	strEnemyBlueprintPath.Add(TEXT("/Game/Blueprints/Enemy/Grim/BP_Grim_Red"));
+	strEnemyBlueprintPath.Add(TEXT("/Game/Blueprints/Enemy/Grim/BP_Grim_Green"));
+
+	for (auto enemyBlueprintPath : strEnemyBlueprintPath)
+	{
+		ConstructorHelpers::FClassFinder<AEnemyBase> EnemyBlueprint(*enemyBlueprintPath);
+		if (EnemyBlueprint.Succeeded())
+		{
+			m_enemyBlueprint.Add(EnemyBlueprint.Class);
+		}
+	}
 }
 
 
@@ -40,4 +55,9 @@ UStaticMesh* UChapterAssetManager::GetConsumptionItemMesh(uint8 ItemCode) const
 UStaticMesh* UChapterAssetManager::GetEquipmentItemMesh(uint8 ItemCode) const
 {
 	return m_equipmentItemStaticMesh[ItemCode];
+}
+
+TSubclassOf<AEnemyBase> UChapterAssetManager::GetEnemyBlueprintClass(uint8 EnemyCode) const
+{
+	return m_enemyBlueprint[EnemyCode];
 }
