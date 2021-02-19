@@ -26,5 +26,4 @@ public:
 	AItem();
 
 	virtual void Tick(float DeltaTime) override;
-
 };
