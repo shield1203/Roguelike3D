@@ -4,8 +4,6 @@
 #include "EnemyBase.h"
 #include "Enemy_Boss.generated.h"
 
-
-
 UCLASS()
 class ROGUELIKE3D_API AEnemy_Boss : public AEnemyBase
 {
@@ -16,16 +14,28 @@ private:
 	class UBossAnimInstance* m_bossAnimInstance;
 
 	UPROPERTY(VisibleAnywhere)
-	bool m_skilling;
+	int32 m_maxPattern;
+
+	UPROPERTY(VisibleAnywhere)
+	int32 m_curPattern;
 
 protected:
 	virtual void BeginPlay() override;
 
 	virtual void PostInitializeComponents() override;
 
+	virtual void Tick(float DeltaTime) override;
+
 public:
 	AEnemy_Boss();
 
-	UFUNCTION(BlueprintCallable)
-	void AnimNotify_SkillEnd();
+	void StartPattern();
+
+	void Pattern0();
+
+	void Pattern1();
+
+	void Pattern2();
+
+	void EndPattern();
 };

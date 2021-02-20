@@ -10,32 +10,44 @@ class ROGUELIKE3D_API ABossSkillObject : public AActor
 	GENERATED_BODY()
 	
 private:
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere)
 	class USceneComponent* m_sceneCompoent;
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere)
+	class USphereComponent* m_collisionComponent;
+
+	UPROPERTY(VisibleAnywhere)
 	class UDecalComponent* m_decalComponent;
 
-	// 파티클
-
-	// 타이머핸들러
+	UPROPERTY(VisibleAnywhere)
+	class UParticleSystem* m_particleSystem;
 	
-	// 경과시간
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	class UMaterialInstanceDynamic* m_rangeMaterial;
 
-	// 최대시간
+	UPROPERTY()
+	float m_leftTime;
+
+	UPROPERTY()
+	float m_maxTime;
 
 	UPROPERTY()
 	float m_maxValue;
+
+	UPROPERTY()
+	float m_damage;
 
 protected:
 	virtual void BeginPlay() override;
 
 	virtual void Tick(float DeltaTime) override;
 
+	void ProgressRange(float fProgressPercent);
+
+	void FinishedTimer();
+
 public:	
 	ABossSkillObject();
 
-	//void 시간 지나면 메테리얼값 변경, 범위변경
-
-	//void 최대시간경과 플레이어 공격, 파티클 스폰, 사라짐
+	void InitializeSkillObject(float fDamage, float fMaxTime);
 };
