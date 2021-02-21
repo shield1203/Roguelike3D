@@ -1,6 +1,7 @@
 #include "PortalSystem.h"
 #include "Runtime/Engine/Public/EngineUtils.h"
 #include "Portal.h"
+#include "BossStagePortal.h"
 
 UPortalSystem::UPortalSystem()
 {
@@ -128,6 +129,14 @@ void UPortalSystem::StartActivePortals(int32 mapNumber)
 		if (portal->GetMapNumber() == mapNumber)
 		{
 			portal->SetActivation(true);
+		}
+	}
+
+	for (TActorIterator<ABossStagePortal> bossPortal(world); bossPortal; ++bossPortal)
+	{
+		if (bossPortal->GetMapNumber() == mapNumber)
+		{
+			bossPortal->SetActivation(true);
 		}
 	}
 }

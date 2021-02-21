@@ -32,7 +32,7 @@ ABossSkillObject::ABossSkillObject()
 	}
 	m_rangeMaterial = m_decalComponent->CreateDynamicMaterialInstance();
 
-	static ConstructorHelpers::FObjectFinder<UParticleSystem>BossSkillObjectParticle(TEXT("/Game/ParagonRiktor/FX/Particles/Abilities/Primary/FX/P_Chains_Melee_Impact"));
+	static ConstructorHelpers::FObjectFinder<UParticleSystem>BossSkillObjectParticle(TEXT("/Game/ParagonRiktor/FX/Particles/Abilities/ShockingGround/FX/P_Chains_ShockingGround_Shockwave"));
 	if (BossSkillObjectParticle.Succeeded())
 	{
 		m_particleSystem = BossSkillObjectParticle.Object;
@@ -87,12 +87,11 @@ void ABossSkillObject::FinishedTimer()
 		if (pPlayer)
 		{
 			//
-			UE_LOG(LogTemp, Warning, TEXT("Hit!!"));
 		}
 		break;
 	}
 
-	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), m_particleSystem, GetActorLocation(), GetActorRotation(), FVector(5.0f));
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), m_particleSystem, GetActorLocation(), GetActorRotation(), FVector(0.59f));
 
 	Destroy();
 }

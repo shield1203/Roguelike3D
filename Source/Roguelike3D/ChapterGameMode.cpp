@@ -56,6 +56,10 @@ void AChapterGameMode::StartPlay()
 
 	m_portalSystem->SetRandomRoguelikeMap();
 	m_portalSystem->StartActivePortals(0);
+	m_portalSystem->StartActivePortals(1);
+	m_portalSystem->StartActivePortals(2);
+	m_portalSystem->StartActivePortals(3);
+	m_portalSystem->StartActivePortals(4);
 
 	m_mainWidget->AddToViewport();
 
@@ -117,7 +121,7 @@ void AChapterGameMode::SetCurMapNumber(int32 mapNumber, int32 xPos, int32 yPos)
 {
 	m_curMapNumber = mapNumber;
 
-	m_bigmapManager->CheckVisitedBlocks(mapNumber, xPos, yPos);
+	if(m_curMapNumber != -1) m_bigmapManager->CheckVisitedBlocks(mapNumber, xPos, yPos);
 }
 
 int32 AChapterGameMode::GetCurMapNumber() const

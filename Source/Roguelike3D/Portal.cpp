@@ -13,7 +13,7 @@
 
 APortal::APortal()
 {
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	InputComponent = CreateDefaultSubobject<UInputComponent>(TEXT("PortalInputComponent"));
 	InputComponent->BindKey(EKeys::F, EInputEvent::IE_Pressed, this, &APortal::OnPressButton);

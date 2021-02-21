@@ -11,6 +11,7 @@ enum class EEnemyCode : uint8
 	Grim_White UMETA(DisplayName = "Grim_White"),
 	Grim_Red UMETA(DisplayName = "Grim_Red"),
 	Grim_Green UMETA(DisplayName = "Grim_Green"),
+	Boss UMETA(DisplayName = "Boss"),
 };
 
 UENUM(BlueprintType)

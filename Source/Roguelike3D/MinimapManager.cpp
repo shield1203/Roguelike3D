@@ -25,6 +25,8 @@ FVector2D UMinimapManager::GetPlayerIconLocation(int32 mapNumber)
 {
 	FVector2D PlayerIconLocation;
 
+	if (mapNumber == -1) return PlayerIconLocation;
+
 	ARoguelike3DCharacter* pPlayer = Cast<ARoguelike3DCharacter>(UGameplayStatics::GetPlayerPawn(this, 0));
 	if (pPlayer != nullptr)
 	{
@@ -41,6 +43,8 @@ FVector2D UMinimapManager::GetPlayerIconLocation(int32 mapNumber)
 FVector2D UMinimapManager::GetPortalIconLocation(int32 mapNumber, int32 portalNumber)
 {
 	FVector2D PortalconLocation = FVector2D(-1.f);
+
+	if (mapNumber == -1) return PortalconLocation;
 
 	UWorld* world = GetWorld();
 	for (TActorIterator<APortal> portal(world); portal; ++portal)
@@ -64,6 +68,9 @@ FVector2D UMinimapManager::GetPortalIconLocation(int32 mapNumber, int32 portalNu
 FVector2D UMinimapManager::GetMinimapTextureSize(int32 mapNumber)
 {
 	FVector2D TextureSize;
+
+	if (mapNumber == -1) return TextureSize;
+
 	TextureSize.X = m_MinimapData[mapNumber].MinimapTexture->GetSizeX() * 0.375;
 	TextureSize.Y = m_MinimapData[mapNumber].MinimapTexture->GetSizeY() * 0.375;
 
@@ -72,5 +79,6 @@ FVector2D UMinimapManager::GetMinimapTextureSize(int32 mapNumber)
 
 UTexture2D* UMinimapManager::GetMinimaptexture(int32 mapNumber) const
 {
+	if(mapNumber == -1) return m_MinimapData[0].MinimapTexture;
 	return m_MinimapData[mapNumber].MinimapTexture;
 }

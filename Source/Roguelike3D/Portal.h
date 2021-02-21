@@ -67,5 +67,4 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void OnPressButton();
-
 };

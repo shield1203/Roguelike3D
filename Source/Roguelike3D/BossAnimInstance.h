@@ -4,10 +4,11 @@
 #include "Animation/AnimInstance.h"
 #include "BossAnimInstance.generated.h"
 
-DECLARE_DELEGATE(FOnPattern0Delegate);
-DECLARE_DELEGATE(FOnPattern1Delegate);
-DECLARE_DELEGATE(FOnPattern2Delegate);
+DECLARE_DELEGATE(FOnPatternADelegate);
+DECLARE_DELEGATE(FOnPatternBDelegate);
+DECLARE_DELEGATE(FOnPatternCDelegate);
 DECLARE_DELEGATE(FOnDeathDelegate);
+DECLARE_DELEGATE(FOnEndDelegate);
 
 UCLASS()
 class ROGUELIKE3D_API UBossAnimInstance : public UAnimInstance
@@ -16,21 +17,27 @@ class ROGUELIKE3D_API UBossAnimInstance : public UAnimInstance
 	
 protected:
 	UPROPERTY()
-	UAnimMontage* m_startMontage;
+	UAnimMontage* m_patternAMontage;
 	
-	
+	UPROPERTY()
+	UAnimMontage* m_patternBMontage;
+
+	UPROPERTY()
+	UAnimMontage* m_patternCMontage;
 
 	UPROPERTY()
 	UAnimMontage* m_deathMontage;
 
 public:
-	FOnPattern0Delegate OnPattren0;
+	FOnPatternADelegate OnPattrenA;
 
-	FOnPattern0Delegate OnPattren1;
+	FOnPatternBDelegate OnPattrenB;
 
-	FOnPattern0Delegate OnPattren2;
+	FOnPatternCDelegate OnPattrenC;
 
 	FOnDeathDelegate OnDeath;
+
+	FOnEndDelegate OnEnd;
 
 public:
 	UBossAnimInstance();
@@ -39,22 +46,22 @@ public:
 	void AnimNotify_End();
 
 	UFUNCTION(BlueprintCallable)
-	void StartPattern0();
+	void StartPatternA();
 
 	UFUNCTION(BlueprintCallable)
-	void AnimNotify_Pattern0();
+	void AnimNotify_PatternA();
 
 	UFUNCTION(BlueprintCallable)
-	void StartPattern1();
+	void StartPatternB();
 
 	UFUNCTION(BlueprintCallable)
-	void AnimNotify_Pattern1();
+	void AnimNotify_PatternB();
 
 	UFUNCTION(BlueprintCallable)
-	void StartPattern2();
+	void StartPatternC();
 
 	UFUNCTION(BlueprintCallable)
-	void AnimNotify_Pattern2();
+	void AnimNotify_PatternC();
 
 	UFUNCTION(BlueprintCallable)
 	void StartDeath();

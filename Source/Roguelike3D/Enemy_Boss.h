@@ -31,11 +31,15 @@ public:
 
 	void StartPattern();
 
-	void Pattern0();
+	UFUNCTION(BlueprintCallable)
+	void PatternA();
 
-	void Pattern1();
+	UFUNCTION(BlueprintCallable)
+	void PatternB();
 
-	void Pattern2();
+	UFUNCTION(BlueprintCallable)
+	void PatternC();
 
+	UFUNCTION(BlueprintCallable)
 	void EndPattern();
 };
