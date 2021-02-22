@@ -64,7 +64,12 @@ protected:
 	FEnemyData m_enemyData;
 
 	UPROPERTY(VisibleAnywhere)
+	float m_curHP;
+
+	UPROPERTY(VisibleAnywhere)
 	EEnemyState m_enemyState;
+
+	FTimerHandle m_damageTimerHandle;
 
 protected:
 	virtual void BeginPlay() override;
@@ -76,9 +81,15 @@ protected:
 public:	
 	AEnemyBase();
 
+	virtual void TakeDamage(float Damage);
+
+	void DamageTimerFinished();
+
 	void SetEnemyState(EEnemyState state);
 
 	EEnemyState GetEnemyState() const;
 
 	float GetAttackRange() const;
+
+	float CurHPPercent() const;
 };

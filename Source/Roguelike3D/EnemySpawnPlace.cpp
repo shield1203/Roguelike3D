@@ -63,6 +63,7 @@ void AEnemySpawnPlace::OnPlayerInRange(class UPrimitiveComponent* OverlappedComp
 			if (pGameMode)
 			{
 				m_particleComponent->SetActive(true);
+				m_collisionComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 				FActorSpawnParameters SpawnParams;
 				SpawnParams.Owner = this;

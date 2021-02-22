@@ -1,4 +1,5 @@
 #include "Enemy_Grim.h"
+#include "Components/StaticMeshComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Perception/AIPerceptionStimuliSourceComponent.h"
 #include "Perception/AISense_Sight.h"
@@ -19,9 +20,15 @@ AEnemy_Grim::AEnemy_Grim()
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 480.f, 0.0f);
 
-	m_stimulusComponent = CreateDefaultSubobject<UAIPerceptionStimuliSourceComponent>(TEXT("GrimStimulusComponent"));
+	int32 MaterialIndex[7] = {0, 1, 3, 5, 6, 9, 10};
+	for (auto Index : MaterialIndex)
+	{
+		GetMesh()->CreateDynamicMaterialInstance(Index);
+	}
+
+	/*m_stimulusComponent = CreateDefaultSubobject<UAIPerceptionStimuliSourceComponent>(TEXT("GrimStimulusComponent"));
 	m_stimulusComponent->RegisterForSense(TSubclassOf<UAISense_Sight>());
-	m_stimulusComponent->RegisterWithPerceptionSystem();
+	m_stimulusComponent->RegisterWithPerceptionSystem();*/
 }
 
 void AEnemy_Grim::BeginPlay()

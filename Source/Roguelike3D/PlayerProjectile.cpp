@@ -9,6 +9,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "ChapterGameMode.h"
 #include "Roguelike3DCharacter.h"
+#include "EnemyBase.h"
 #include "Item.h"
 #include "ChapterAssetManager.h"
 
@@ -88,6 +89,12 @@ void APlayerProjectile::OnProjectileBeginOverlap(class UPrimitiveComponent* Over
 	APlayerProjectile* pProjectile = Cast<APlayerProjectile>(OtherActor);
 
 	if (pPlayer || pItem || pProjectile) return;
+
+	AEnemyBase* pEnemy = Cast<AEnemyBase>(OtherActor);
+	if (pEnemy)
+	{
+		pEnemy->TakeDamage(m_damage);
+	}
 
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), m_particleSystem, GetActorLocation(), GetActorRotation());
 

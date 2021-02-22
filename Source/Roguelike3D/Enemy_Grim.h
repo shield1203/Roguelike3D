@@ -10,8 +10,8 @@ class ROGUELIKE3D_API AEnemy_Grim : public AEnemyBase
 	GENERATED_BODY()
 	
 private:
-	UPROPERTY(VisibleAnywhere)
-	class UAIPerceptionStimuliSourceComponent* m_stimulusComponent;
+	/*UPROPERTY(VisibleAnywhere)
+	class UAIPerceptionStimuliSourceComponent* m_stimulusComponent;*/
 
 	UPROPERTY(VisibleAnywhere)
 	class UGrimAnimInstance* m_grimAnimInstance;
