@@ -6,6 +6,8 @@ AEnemyBase::AEnemyBase()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	m_enemyState = EEnemyState::Idle;
+
+	GetCapsuleComponent()->SetCollisionProfileName(TEXT("Enemy"));
 }
 
 void AEnemyBase::BeginPlay()

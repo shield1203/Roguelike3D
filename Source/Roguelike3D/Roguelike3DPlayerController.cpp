@@ -1,6 +1,7 @@
 #include "Roguelike3DPlayerController.h"
 #include "Kismet/GameplayStatics.h"
 #include "Roguelike3DCharacter.h"
+#include "EnemyBase.h"
 #include "ChapterGameMode.h"
 
 ARoguelike3DPlayerController::ARoguelike3DPlayerController()
@@ -37,10 +38,18 @@ void ARoguelike3DPlayerController::SetPlayerRotation()
 
 	if (Hit.bBlockingHit)
 	{
+		FVector Point = Hit.ImpactPoint;
+
+		AEnemyBase* pEnemy = Cast<AEnemyBase>(Hit.GetActor());
+		if (pEnemy)
+		{
+			Point = pEnemy->GetActorLocation();
+		}
+
 		ARoguelike3DCharacter* pPlayerPawn = Cast<ARoguelike3DCharacter>(GetPawn());
 		if (pPlayerPawn && !pPlayerPawn->IsSkilling())
 		{
-			float fRadian = FMath::Atan2(Hit.ImpactPoint.Y - pPlayerPawn->GetActorLocation().Y, Hit.ImpactPoint.X - pPlayerPawn->GetActorLocation().X);
+			float fRadian = FMath::Atan2(Point.Y - pPlayerPawn->GetActorLocation().Y, Point.X - pPlayerPawn->GetActorLocation().X);
 			float fDegree = FMath::RadiansToDegrees(fRadian);
 
 			pPlayerPawn->SetActorRotation(FRotator(0, fDegree, 0));
