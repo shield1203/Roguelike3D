@@ -99,12 +99,13 @@ void APlayerProjectile::OnProjectileBeginOverlap(class UPrimitiveComponent* Over
 		pEnemy->TakeDamage(m_damage);
 
 		FActorSpawnParameters SpawnParams;
-		SpawnParams.Owner = this;
+		SpawnParams.Owner = GetOwner();
+		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
-		auto pFloatingText = GetWorld()->SpawnActor<AFloatingTextObject>(GetActorLocation(), GetActorRotation(), SpawnParams);
+		auto pFloatingText = GetWorld()->SpawnActor<AFloatingTextObject>(GetActorLocation(), FRotator(0), SpawnParams);
 		if (pFloatingText)
 		{
-			pFloatingText->InitializeDamageText(m_damage, 1.f, 1.f, 1.f);
+			pFloatingText->InitializeDamageText(m_damage, 1, 0, 0);
 		}
 	}
 

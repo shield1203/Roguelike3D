@@ -5,6 +5,7 @@
 #include "ConsumptionItemWidget.h"
 #include "DamageWidget.h"
 #include "Kismet/GameplayStatics.h"
+#include "UObject/ConstructorHelpers.h"
 
 AFloatingTextObject::AFloatingTextObject()
 {
@@ -22,7 +23,6 @@ AFloatingTextObject::AFloatingTextObject()
 	}
 	m_consumptionText->SetWidgetSpace(EWidgetSpace::Screen);
 	m_consumptionText->SetDrawSize(FVector2D(500.0f, 60.0f));
-	m_consumptionText->RegisterComponent();
 	m_consumptionText->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	m_consumptionText->SetVisibility(false);
 
@@ -35,7 +35,6 @@ AFloatingTextObject::AFloatingTextObject()
 	}
 	m_damageText->SetWidgetSpace(EWidgetSpace::Screen);
 	m_damageText->SetDrawSize(FVector2D(500.0f, 60.0f));
-	m_damageText->RegisterComponent();
 	m_damageText->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	m_damageText->SetVisibility(false);
 }
@@ -43,6 +42,7 @@ AFloatingTextObject::AFloatingTextObject()
 void AFloatingTextObject::BeginPlay()
 {
 	Super::BeginPlay();
+
 }
 
 void AFloatingTextObject::Tick(float DeltaTime)
