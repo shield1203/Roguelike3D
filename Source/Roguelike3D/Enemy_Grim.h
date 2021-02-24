@@ -24,6 +24,8 @@ protected:
 public:
 	AEnemy_Grim();
 
+	virtual void TakeDamage(float Damage) override;
+
 	UFUNCTION(BlueprintCallable)
 	void StartFire();
 

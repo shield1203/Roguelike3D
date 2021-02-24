@@ -10,6 +10,7 @@
 #include "Roguelike3DCharacter.h"
 #include "PlayerProjectile.h"
 #include "EnemyBase.h"
+#include "EnemySpawnPlace.h"
 
 AGrimProjectile::AGrimProjectile()
 {
@@ -73,7 +74,9 @@ void AGrimProjectile::OnProjectileBeginOverlap(class UPrimitiveComponent* Overla
 	auto pEnemyActor = Cast<AEnemyBase>(OtherActor);
 	auto pGrimProjectile = Cast<AGrimProjectile>(OtherActor);
 	auto pPlayerProjectile = Cast<APlayerProjectile>(OtherActor);
-	if (pEnemyActor || pGrimProjectile || pPlayerProjectile) return;
+	auto pEnemySpawnPlace = Cast<AEnemySpawnPlace>(OtherActor);
+
+	if (pEnemyActor || pGrimProjectile || pPlayerProjectile || pEnemySpawnPlace) return;
 
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), m_particleSystem, GetActorLocation(), GetActorRotation());
 

@@ -10,8 +10,10 @@
 #include "ChapterGameMode.h"
 #include "Roguelike3DCharacter.h"
 #include "EnemyBase.h"
+#include "EnemySpawnPlace.h"
 #include "Item.h"
 #include "ChapterAssetManager.h"
+#include "FloatingTextObject.h"
 
 APlayerProjectile::APlayerProjectile()
 {
@@ -87,13 +89,23 @@ void APlayerProjectile::OnProjectileBeginOverlap(class UPrimitiveComponent* Over
 	ARoguelike3DCharacter* pPlayer = Cast<ARoguelike3DCharacter>(OtherActor);
 	AItem* pItem = Cast<AItem>(OtherActor);
 	APlayerProjectile* pProjectile = Cast<APlayerProjectile>(OtherActor);
+	auto pEnemySpawnPlace = Cast<AEnemySpawnPlace>(OtherActor);
 
-	if (pPlayer || pItem || pProjectile) return;
+	if (pPlayer || pItem || pProjectile || pEnemySpawnPlace) return;
 
 	AEnemyBase* pEnemy = Cast<AEnemyBase>(OtherActor);
 	if (pEnemy)
 	{
 		pEnemy->TakeDamage(m_damage);
+
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.Owner = this;
+
+		auto pFloatingText = GetWorld()->SpawnActor<AFloatingTextObject>(GetActorLocation(), GetActorRotation(), SpawnParams);
+		if (pFloatingText)
+		{
+			pFloatingText->InitializeDamageText(m_damage, 1.f, 1.f, 1.f);
+		}
 	}
 
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), m_particleSystem, GetActorLocation(), GetActorRotation());

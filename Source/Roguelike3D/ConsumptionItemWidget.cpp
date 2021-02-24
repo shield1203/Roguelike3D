@@ -6,6 +6,4 @@ void UConsumptionItemWidget::SetValue(AActor* OwningActor, int32 value, FString 
 	m_value = value;
 	m_target = target;
 	m_color = FSlateColor(FLinearColor(R, G, B));
-
-	
 }

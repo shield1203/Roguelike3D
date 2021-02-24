@@ -24,7 +24,7 @@ AConsumptionItem::AConsumptionItem()
 
 	m_valueWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("ValueWidgetComponent"));
 	m_valueWidget->SetupAttachment(m_collisionComponent);
-	static ConstructorHelpers::FClassFinder<UConsumptionItemWidget> ValueWidget(TEXT("/Game/Widgets/Chapter/WB_ConsumptionValue"));
+	static ConstructorHelpers::FClassFinder<UConsumptionItemWidget> ValueWidget(TEXT("/Game/Widgets/Chapter/WB_Consumption"));
 	if (ValueWidget.Succeeded())
 	{
 		m_valueWidget->SetWidgetClass(ValueWidget.Class);

@@ -9,6 +9,8 @@ AEnemyBase::AEnemyBase()
 	m_enemyState = EEnemyState::Idle;
 
 	GetCapsuleComponent()->SetCollisionProfileName(TEXT("Enemy"));
+
+	m_particleSystem = nullptr;
 }
 
 void AEnemyBase::BeginPlay()
@@ -24,7 +26,7 @@ void AEnemyBase::Tick(float DeltaTime)
 
 void AEnemyBase::TakeDamage(float Damage)
 {
-	GetMesh()->SetScalarParameterValueOnMaterials(TEXT("Damage"), 0.5f);
+	GetMesh()->SetScalarParameterValueOnMaterials(TEXT("Damage"), 0.2f);
 	
 	GetWorldTimerManager().SetTimer(m_damageTimerHandle, this, &AEnemyBase::DamageTimerFinished, 0.1f, false);
 }

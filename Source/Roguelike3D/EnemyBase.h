@@ -69,6 +69,9 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	EEnemyState m_enemyState;
 
+	UPROPERTY(VisibleAnywhere)
+	class UParticleSystem* m_particleSystem;
+
 	FTimerHandle m_damageTimerHandle;
 
 protected:
