@@ -10,7 +10,7 @@ AGrimAIController::AGrimAIController()
 		m_behaviorTree = GrimBehaviorTree.Object;
 	}
 
-	SetPerceptionSystem(700.f, 180.f);
+	SetPerceptionSystem(800.f, 350.f);
 }
 
 //void AGrimAIController::PlayerTick(float DeltaTime)

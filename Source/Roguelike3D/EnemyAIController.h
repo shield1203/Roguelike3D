@@ -35,13 +35,15 @@ protected:
 public:
 	AEnemyAIController();
 
+	virtual void Attack() {};
+
 	class UBlackboardComponent* GetBlackboard() const;
+
+	void PlayerDetected();
 
 	UFUNCTION(BlueprintCallable)
 	void StopAI();
 
 	UFUNCTION(BlueprintCallable)
 	void OnTargetDetected(AActor* Actor, FAIStimulus const Stimulus);
-
-	virtual void Attack() {};
 };

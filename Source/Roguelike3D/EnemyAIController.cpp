@@ -59,13 +59,21 @@ void AEnemyAIController::OnTargetDetected(AActor* Actor, FAIStimulus const Stimu
 {
 	if (auto const player = Cast<ARoguelike3DCharacter>(Actor))
 	{
-		GetBlackboard()->SetValueAsBool(bbKeys::can_see_player, Stimulus.WasSuccessfullySensed());
+		if (!GetBlackboard()->GetValueAsBool(bbKeys::can_see_player))
+		{
+			GetBlackboard()->SetValueAsBool(bbKeys::can_see_player, Stimulus.WasSuccessfullySensed());
+		}
 	}
 }
 
 UBlackboardComponent* AEnemyAIController::GetBlackboard() const
 {
 	return m_blackboardComponent;
+}
+
+void AEnemyAIController::PlayerDetected()
+{
+	GetBlackboard()->SetValueAsBool(bbKeys::can_see_player, true);
 }
 
 void AEnemyAIController::StopAI()

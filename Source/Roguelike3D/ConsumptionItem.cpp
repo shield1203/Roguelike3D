@@ -1,13 +1,12 @@
 #include "ConsumptionItem.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/BoxComponent.h"
-#include "Components/WidgetComponent.h"
 #include "Blueprint/UserWidget.h"
-#include "ConsumptionItemWidget.h"
 #include "ChapterAssetManager.h"
 #include "ChapterGameMode.h"
 #include "Roguelike3DCharacter.h"
 #include "Inventory.h"
+#include "FloatingTextObject.h"
 
 AConsumptionItem::AConsumptionItem()
 {
@@ -22,18 +21,6 @@ AConsumptionItem::AConsumptionItem()
 	m_collisionComponent->SetBoxExtent(FVector(45.f, 45.f, 90.f));
 	m_collisionComponent->OnComponentBeginOverlap.AddDynamic(this, &AConsumptionItem::OnPlayerBeginOverlap);
 
-	m_valueWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("ValueWidgetComponent"));
-	m_valueWidget->SetupAttachment(m_collisionComponent);
-	static ConstructorHelpers::FClassFinder<UConsumptionItemWidget> ValueWidget(TEXT("/Game/Widgets/Chapter/WB_Consumption"));
-	if (ValueWidget.Succeeded())
-	{
-		m_valueWidget->SetWidgetClass(ValueWidget.Class);
-	}
-	m_valueWidget->SetWidgetSpace(EWidgetSpace::Screen);
-	m_valueWidget->SetDrawSize(FVector2D(500.0f, 60.0f));
-	m_valueWidget->RegisterComponent();
-	m_valueWidget->SetVisibility(false);
-
 	m_staticMeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
@@ -42,12 +29,6 @@ void AConsumptionItem::BeginPlay()
 	Super::BeginPlay();
 
 	LoadItemData();
-
-	UConsumptionItemWidget* pValueWidget = Cast<UConsumptionItemWidget>(m_valueWidget->GetUserWidgetObject());
-	if (pValueWidget)
-	{
-		pValueWidget->SetValue(this, m_itemData.Value, m_itemData.Target, m_itemData.R, m_itemData.G, m_itemData.B);
-	}
 
 	srand((unsigned int)time(0));
 	int32 nImpulseValueX = (rand() % 800) - 400;
@@ -84,7 +65,7 @@ void AConsumptionItem::LoadItemData()
 	if (m_itemData.ItemCode == EConsumptionItemCode::Coin)
 	{
 		srand((unsigned int)time(0));
-		m_itemData.Value = (rand() % 100) + 1;;
+		m_itemData.Value = (rand() % 100) + 1;
 	}
 
 	UWorld* pWorld = GetWorld();
@@ -110,7 +91,18 @@ void AConsumptionItem::OnPlayerBeginOverlap(class UPrimitiveComponent* Overlappe
 		m_collisionComponent->SetSimulatePhysics(false);
 		m_collisionComponent->SetCollisionProfileName(TEXT("NoCollision"));
 		m_collisionComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		m_valueWidget->SetVisibility(true);
+		
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.Owner = GetOwner();
+		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+		auto pFloatingText = GetWorld()->SpawnActor<AFloatingTextObject>(GetActorLocation(), FRotator(0), SpawnParams);
+		if (pFloatingText)
+		{
+			pFloatingText->InitializeConsumptionText(m_itemData.Value, m_itemData.Target, m_itemData.R, m_itemData.G, m_itemData.B);
+		}
+
+		Destroy();
 	}
 }
 
@@ -124,5 +116,4 @@ void AConsumptionItem::Use(ARoguelike3DCharacter* pPlayerPawn)
 	case EConsumptionItemCode::Milkshake:
 	case EConsumptionItemCode::Donut: pPlayerPawn->RecoveryHP(m_itemData.Value); break;
 	}
-	
 }

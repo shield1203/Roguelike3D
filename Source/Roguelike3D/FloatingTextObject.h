@@ -26,7 +26,6 @@ protected:
 public:	
 	AFloatingTextObject();
 	
-	
 	void InitializeConsumptionText(int32 value, FString target, float R, float G, float B);
 
 	void InitializeDamageText(int32 value, float R, float G, float B);

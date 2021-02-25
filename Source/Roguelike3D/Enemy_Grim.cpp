@@ -1,11 +1,14 @@
 #include "Enemy_Grim.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Perception/AIPerceptionStimuliSourceComponent.h"
 #include "Perception/AISense_Sight.h"
 #include "Particles/ParticleSystem.h"
 #include "Kismet/GameplayStatics.h"
+#include "Blueprint/UserWidget.h"
+#include "WidgetBase.h"
 #include "GrimAnimInstance.h"
 #include "EnemyAIController.h"
 #include "GrimProjectile.h"
@@ -35,9 +38,16 @@ AEnemy_Grim::AEnemy_Grim()
 		m_particleSystem = GrimDethParticle.Object;
 	}
 
-	/*m_stimulusComponent = CreateDefaultSubobject<UAIPerceptionStimuliSourceComponent>(TEXT("GrimStimulusComponent"));
-	m_stimulusComponent->RegisterForSense(TSubclassOf<UAISense_Sight>());
-	m_stimulusComponent->RegisterWithPerceptionSystem();*/
+	static ConstructorHelpers::FClassFinder<UWidgetBase>GrimHPBar(TEXT("/Game/Widgets/Chapter/WB_EnemyHP"));
+	if (GrimHPBar.Succeeded())
+	{
+		m_HPBarWidget->SetWidgetClass(GrimHPBar.Class);
+	}
+	m_HPBarWidget->SetWidgetSpace(EWidgetSpace::Screen);
+	m_HPBarWidget->SetDrawSize(FVector2D(120, 7));
+	m_HPBarWidget->SetRelativeLocation(FVector(0, 0, 135.f));
+
+	m_stimulusComponent = CreateDefaultSubobject<UAIPerceptionStimuliSourceComponent>(TEXT("GrimStimulusComponent"));
 }
 
 void AEnemy_Grim::BeginPlay()
@@ -45,6 +55,17 @@ void AEnemy_Grim::BeginPlay()
 	Super::BeginPlay();
 
 	LoadEnemyData();
+
+	m_HPBarWidget->SetVisibility(false);
+	UWidgetBase* pHPBarWidget = Cast<UWidgetBase>(m_HPBarWidget->GetUserWidgetObject());
+	if (pHPBarWidget)
+	{
+		pHPBarWidget->SetOwningActor(this);
+		pHPBarWidget->SetColor(1, 0, 0);
+	}
+
+	m_stimulusComponent->RegisterForSense(TSubclassOf<UAISense_Sight>());
+	m_stimulusComponent->RegisterWithPerceptionSystem();
 }
 
 void AEnemy_Grim::PostInitializeComponents()
@@ -56,11 +77,19 @@ void AEnemy_Grim::PostInitializeComponents()
 	m_grimAnimInstance->OnDeath.BindUFunction(this, FName("Death"));
 }
 
-void AEnemy_Grim::TakeDamage(float Damage)
+void AEnemy_Grim::TakeDamageEnemy(float Damage)
 {
-	Super::TakeDamage(Damage);
+	Super::TakeDamageEnemy(Damage);
 
 	if (m_enemyState == EEnemyState::Death) return;
+
+	AEnemyAIController* pController = Cast<AEnemyAIController>(GetController());
+	if (pController)
+	{
+		pController->PlayerDetected();
+	}
+
+	m_HPBarWidget->SetVisibility(true);
 
 	m_curHP -= Damage;
 	if (m_curHP <= 0)
@@ -100,6 +129,7 @@ void AEnemy_Grim::StartDeath()
 	AEnemyAIController* pController = Cast<AEnemyAIController>(GetController());
 	if (pController) pController->StopAI();
 
+	m_HPBarWidget->SetVisibility(false);
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 

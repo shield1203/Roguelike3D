@@ -10,10 +10,8 @@ class ROGUELIKE3D_API AEnemy_Grim : public AEnemyBase
 	GENERATED_BODY()
 	
 private:
-	/*UPROPERTY(VisibleAnywhere)
-	class UAIPerceptionStimuliSourceComponent* m_stimulusComponent;*/
+	class UAIPerceptionStimuliSourceComponent* m_stimulusComponent;
 
-	UPROPERTY(VisibleAnywhere)
 	class UGrimAnimInstance* m_grimAnimInstance;
 
 protected:
@@ -24,7 +22,7 @@ protected:
 public:
 	AEnemy_Grim();
 
-	virtual void TakeDamage(float Damage) override;
+	virtual void TakeDamageEnemy(float Damage) override;
 
 	UFUNCTION(BlueprintCallable)
 	void StartFire();

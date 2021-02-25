@@ -16,7 +16,7 @@ AFloatingTextObject::AFloatingTextObject()
 
 	m_consumptionText = CreateDefaultSubobject<UWidgetComponent>(TEXT("ConsumptionWidgetComponent"));
 	m_consumptionText->SetupAttachment(RootComponent);
-	static ConstructorHelpers::FClassFinder<UConsumptionItemWidget> ConsumptionWidget(TEXT("/Game/Widgets/Chapter/WB_Consumption"));
+	static ConstructorHelpers::FClassFinder<UConsumptionItemWidget>ConsumptionWidget(TEXT("/Game/Widgets/Chapter/WB_Consumption"));
 	if (ConsumptionWidget.Succeeded())
 	{
 		m_consumptionText->SetWidgetClass(ConsumptionWidget.Class);
@@ -28,7 +28,7 @@ AFloatingTextObject::AFloatingTextObject()
 
 	m_damageText = CreateDefaultSubobject<UWidgetComponent>(TEXT("DamageWidgetComponent"));
 	m_damageText->SetupAttachment(RootComponent);
-	static ConstructorHelpers::FClassFinder<UDamageWidget> DamageWidget(TEXT("/Game/Widgets/Chapter/WB_Damage"));
+	static ConstructorHelpers::FClassFinder<UDamageWidget>DamageWidget(TEXT("/Game/Widgets/Chapter/WB_Damage"));
 	if (DamageWidget.Succeeded())
 	{
 		m_damageText->SetWidgetClass(DamageWidget.Class);

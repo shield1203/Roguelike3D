@@ -46,9 +46,6 @@ class ROGUELIKE3D_API AConsumptionItem : public AItem
 protected:
 	bool m_use;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class UWidgetComponent* m_valueWidget;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	EConsumptionItemCode m_itemCode;
 

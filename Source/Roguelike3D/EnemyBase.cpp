@@ -1,6 +1,7 @@
 #include "EnemyBase.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Components/WidgetComponent.h"
 #include "TimerManager.h"
 
 AEnemyBase::AEnemyBase()
@@ -10,6 +11,10 @@ AEnemyBase::AEnemyBase()
 
 	GetCapsuleComponent()->SetCollisionProfileName(TEXT("Enemy"));
 
+	m_HPBarWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("EnemyHPBarWidgetComponent"));
+	m_HPBarWidget->SetupAttachment(RootComponent);
+	m_HPBarWidget->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	
 	m_particleSystem = nullptr;
 }
 
@@ -24,7 +29,7 @@ void AEnemyBase::Tick(float DeltaTime)
 
 }
 
-void AEnemyBase::TakeDamage(float Damage)
+void AEnemyBase::TakeDamageEnemy(float Damage)
 {
 	GetMesh()->SetScalarParameterValueOnMaterials(TEXT("Damage"), 0.2f);
 	

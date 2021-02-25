@@ -96,7 +96,7 @@ void APlayerProjectile::OnProjectileBeginOverlap(class UPrimitiveComponent* Over
 	AEnemyBase* pEnemy = Cast<AEnemyBase>(OtherActor);
 	if (pEnemy)
 	{
-		pEnemy->TakeDamage(m_damage);
+		pEnemy->TakeDamageEnemy(m_damage);
 
 		FActorSpawnParameters SpawnParams;
 		SpawnParams.Owner = GetOwner();

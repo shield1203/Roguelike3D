@@ -72,6 +72,9 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	class UParticleSystem* m_particleSystem;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UWidgetComponent* m_HPBarWidget;
+
 	FTimerHandle m_damageTimerHandle;
 
 protected:
@@ -84,7 +87,7 @@ protected:
 public:	
 	AEnemyBase();
 
-	virtual void TakeDamage(float Damage);
+	virtual void TakeDamageEnemy(float Damage);
 
 	void DamageTimerFinished();
 
@@ -94,5 +97,6 @@ public:
 
 	float GetAttackRange() const;
 
+	UFUNCTION(BlueprintCallable)
 	float CurHPPercent() const;
 };
