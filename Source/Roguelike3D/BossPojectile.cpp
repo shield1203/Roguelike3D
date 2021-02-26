@@ -8,6 +8,7 @@
 #include "Roguelike3DCharacter.h"
 #include "PlayerProjectile.h"
 #include "EnemyBase.h"
+#include "FloatingTextObject.h"
 
 ABossPojectile::ABossPojectile()
 {
@@ -85,7 +86,17 @@ void ABossPojectile::OnProjectileBeginOverlap(class UPrimitiveComponent* Overlap
 	auto pPlayer = Cast<ARoguelike3DCharacter>(OtherActor);
 	if (pPlayer)
 	{
+		pPlayer->TakeDamagePlayer(m_damage);
 
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.Owner = GetOwner();
+		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+		auto pFloatingText = GetWorld()->SpawnActor<AFloatingTextObject>(GetActorLocation(), FRotator(0), SpawnParams);
+		if (pFloatingText)
+		{
+			pFloatingText->InitializeDamageText(m_damage, 1, 0, 0);
+		}
 	}
 
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), m_particleSystem, GetActorLocation(), GetActorRotation(), FVector(2.0f));

@@ -20,6 +20,10 @@ private:
 	int32 m_curPattern;
 
 protected:
+	UPROPERTY(EditAnyWhere, Category = "BossWidget", meta = (AllowPrivateAccess = "true"))
+	class UWidgetBase* m_BossHPBarWidget;
+
+protected:
 	virtual void BeginPlay() override;
 
 	virtual void PostInitializeComponents() override;
@@ -28,6 +32,8 @@ protected:
 
 public:
 	AEnemy_Boss();
+
+	virtual void TakeDamageEnemy(float Damage) override;
 
 	void StartPattern();
 

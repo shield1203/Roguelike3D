@@ -47,7 +47,7 @@ void ARoguelike3DPlayerController::SetPlayerRotation()
 		}
 
 		ARoguelike3DCharacter* pPlayerPawn = Cast<ARoguelike3DCharacter>(GetPawn());
-		if (pPlayerPawn && !pPlayerPawn->IsSkilling())
+		if (pPlayerPawn && pPlayerPawn->GetState() == EPlayerState::Idle)
 		{
 			float fRadian = FMath::Atan2(Point.Y - pPlayerPawn->GetActorLocation().Y, Point.X - pPlayerPawn->GetActorLocation().X);
 			float fDegree = FMath::RadiansToDegrees(fRadian);
@@ -60,7 +60,7 @@ void ARoguelike3DPlayerController::SetPlayerRotation()
 void ARoguelike3DPlayerController::OnFire()
 {
 	ARoguelike3DCharacter* pPlayerPawn = Cast<ARoguelike3DCharacter>(GetPawn());
-	if (pPlayerPawn && !pPlayerPawn->IsSkilling())
+	if (pPlayerPawn && pPlayerPawn->GetState() == EPlayerState::Idle)
 	{
 		pPlayerPawn->StartFire();
 	}
@@ -69,7 +69,7 @@ void ARoguelike3DPlayerController::OnFire()
 void ARoguelike3DPlayerController::OnTeleport()
 {
 	ARoguelike3DCharacter* pPlayerPawn = Cast<ARoguelike3DCharacter>(GetPawn());
-	if (pPlayerPawn && !pPlayerPawn->IsSkilling())
+	if (pPlayerPawn && pPlayerPawn->GetState() == EPlayerState::Idle)
 	{
 		FHitResult Hit;
 		GetHitResultUnderCursor(ECC_Visibility, false, Hit);
@@ -84,7 +84,7 @@ void ARoguelike3DPlayerController::OnTeleport()
 void ARoguelike3DPlayerController::OnTripleFire()
 {
 	ARoguelike3DCharacter* pPlayerPawn = Cast<ARoguelike3DCharacter>(GetPawn());
-	if (pPlayerPawn && !pPlayerPawn->IsSkilling())
+	if (pPlayerPawn && pPlayerPawn->GetState() == EPlayerState::Idle)
 	{
 		pPlayerPawn->StartTripleFire();
 	}

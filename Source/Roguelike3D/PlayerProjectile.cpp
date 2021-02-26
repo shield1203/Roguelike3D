@@ -105,7 +105,7 @@ void APlayerProjectile::OnProjectileBeginOverlap(class UPrimitiveComponent* Over
 		auto pFloatingText = GetWorld()->SpawnActor<AFloatingTextObject>(GetActorLocation(), FRotator(0), SpawnParams);
 		if (pFloatingText)
 		{
-			pFloatingText->InitializeDamageText(m_damage, 1, 0, 0);
+			pFloatingText->InitializeDamageText(m_damage, 1, 1, 1);
 		}
 	}
 

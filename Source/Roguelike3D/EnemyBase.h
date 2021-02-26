@@ -73,7 +73,7 @@ protected:
 	class UParticleSystem* m_particleSystem;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class UWidgetComponent* m_HPBarWidget;
+	class UWidgetComponent* m_HPBarWidgetComponent;
 
 	FTimerHandle m_damageTimerHandle;
 

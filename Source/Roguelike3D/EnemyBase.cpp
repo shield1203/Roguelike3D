@@ -11,9 +11,9 @@ AEnemyBase::AEnemyBase()
 
 	GetCapsuleComponent()->SetCollisionProfileName(TEXT("Enemy"));
 
-	m_HPBarWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("EnemyHPBarWidgetComponent"));
-	m_HPBarWidget->SetupAttachment(RootComponent);
-	m_HPBarWidget->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	m_HPBarWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("EnemyHPBarWidgetComponent"));
+	m_HPBarWidgetComponent->SetupAttachment(RootComponent);
+	m_HPBarWidgetComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	
 	m_particleSystem = nullptr;
 }

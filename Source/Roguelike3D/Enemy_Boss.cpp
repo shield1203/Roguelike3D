@@ -1,4 +1,7 @@
 #include "Enemy_Boss.h"
+#include "Blueprint/UserWidget.h"
+#include "UObject/ConstructorHelpers.h"
+#include "WidgetBase.h"
 #include "BossSkillObject.h"
 #include "BossPojectile.h"
 #include "NavigationSystem.h"
@@ -9,6 +12,12 @@
 AEnemy_Boss::AEnemy_Boss()
 {
 	PrimaryActorTick.bCanEverTick = true;
+
+	static ConstructorHelpers::FClassFinder<UWidgetBase>BossHPBarWidget(TEXT("/Game/Widgets/Chapter/WB_BossHP"));
+	if (BossHPBarWidget.Succeeded())
+	{
+		m_BossHPBarWidget = Cast<UWidgetBase>(CreateWidget(GetWorld(), BossHPBarWidget.Class));
+	}
 
 	m_enemyCode = EEnemyCode::Boss;
 	m_enemyState = EEnemyState::Attack;
@@ -21,6 +30,9 @@ void AEnemy_Boss::BeginPlay()
 	Super::BeginPlay();
 
 	LoadEnemyData();
+
+	m_BossHPBarWidget->SetOwningActor(this);
+	m_BossHPBarWidget->AddToViewport();
 }
 
 void AEnemy_Boss::PostInitializeComponents()
@@ -41,6 +53,20 @@ void AEnemy_Boss::Tick(float DeltaTime)
 	if (m_enemyState == EEnemyState::Death) return;
 	
 
+}
+
+void AEnemy_Boss::TakeDamageEnemy(float Damage)
+{
+	Super::TakeDamageEnemy(Damage);
+
+	if (m_enemyState == EEnemyState::Death) return;
+
+	m_curHP -= Damage;
+	if (m_curHP <= 0)
+	{
+		m_curHP = 0;
+		//StartDeath();
+	}
 }
 
 void AEnemy_Boss::StartPattern()

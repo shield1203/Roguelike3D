@@ -41,11 +41,11 @@ AEnemy_Grim::AEnemy_Grim()
 	static ConstructorHelpers::FClassFinder<UWidgetBase>GrimHPBar(TEXT("/Game/Widgets/Chapter/WB_EnemyHP"));
 	if (GrimHPBar.Succeeded())
 	{
-		m_HPBarWidget->SetWidgetClass(GrimHPBar.Class);
+		m_HPBarWidgetComponent->SetWidgetClass(GrimHPBar.Class);
 	}
-	m_HPBarWidget->SetWidgetSpace(EWidgetSpace::Screen);
-	m_HPBarWidget->SetDrawSize(FVector2D(120, 7));
-	m_HPBarWidget->SetRelativeLocation(FVector(0, 0, 135.f));
+	m_HPBarWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen);
+	m_HPBarWidgetComponent->SetDrawSize(FVector2D(120, 7));
+	m_HPBarWidgetComponent->SetRelativeLocation(FVector(0, 0, 135.f));
 
 	m_stimulusComponent = CreateDefaultSubobject<UAIPerceptionStimuliSourceComponent>(TEXT("GrimStimulusComponent"));
 }
@@ -56,8 +56,8 @@ void AEnemy_Grim::BeginPlay()
 
 	LoadEnemyData();
 
-	m_HPBarWidget->SetVisibility(false);
-	UWidgetBase* pHPBarWidget = Cast<UWidgetBase>(m_HPBarWidget->GetUserWidgetObject());
+	m_HPBarWidgetComponent->SetVisibility(false);
+	UWidgetBase* pHPBarWidget = Cast<UWidgetBase>(m_HPBarWidgetComponent->GetUserWidgetObject());
 	if (pHPBarWidget)
 	{
 		pHPBarWidget->SetOwningActor(this);
@@ -89,7 +89,7 @@ void AEnemy_Grim::TakeDamageEnemy(float Damage)
 		pController->PlayerDetected();
 	}
 
-	m_HPBarWidget->SetVisibility(true);
+	m_HPBarWidgetComponent->SetVisibility(true);
 
 	m_curHP -= Damage;
 	if (m_curHP <= 0)
@@ -129,7 +129,7 @@ void AEnemy_Grim::StartDeath()
 	AEnemyAIController* pController = Cast<AEnemyAIController>(GetController());
 	if (pController) pController->StopAI();
 
-	m_HPBarWidget->SetVisibility(false);
+	m_HPBarWidgetComponent->SetVisibility(false);
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 

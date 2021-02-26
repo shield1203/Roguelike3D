@@ -12,11 +12,13 @@
 #include "EquipmentItem.h"
 #include "PlayerProjectile.h"
 #include "SkillProjetile.h"
+#include "TimerManager.h"
 
 ARoguelike3DCharacter::ARoguelike3DCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
-	m_skilling = false;
+	
+	m_state = EPlayerState::Idle;
 
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 
@@ -36,15 +38,19 @@ ARoguelike3DCharacter::ARoguelike3DCharacter()
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); 
 	FollowCamera->bUsePawnControlRotation = false; 
 
+	int32 MaterialIndex[7] = { 0, 1, 2, 3, 4 };
+	for (auto Index : MaterialIndex)
+	{
+		GetMesh()->CreateDynamicMaterialInstance(Index);
+	}
+
 	m_inventory = CreateDefaultSubobject<UInventory>(TEXT("Character_Inventory"));
 
 	//////
 	m_ability.fMaxHP = 200.f;
-	m_ability.fHP = 100.f;
+	m_ability.fHP = 200.f;
 	m_ability.fAttackPower = 10.f;
 	m_ability.fDefensivPower = 0.f;
-
-	/////
 }
 
 void ARoguelike3DCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -100,20 +106,35 @@ float ARoguelike3DCharacter::GetPlayerPercentHP()
 	return fCurHP / fMaxHP;
 }
 
+void ARoguelike3DCharacter::TakeDamagePlayer(float Damage)
+{
+	if (m_state == EPlayerState::Death) return;
+
+	m_ability.fHP -= Damage;
+	if (m_ability.fHP <= 0)
+	{
+		m_ability.fHP = 0;
+		StartDeath();
+	}
+
+	GetMesh()->SetScalarParameterValueOnMaterials(TEXT("Damage"), 0.2f);
+	GetWorldTimerManager().SetTimer(m_damageTimerHandle, this, &ARoguelike3DCharacter::DamageTimerFinished, 0.1f, false);
+}
+
+void ARoguelike3DCharacter::DamageTimerFinished()
+{
+	GetMesh()->SetScalarParameterValueOnMaterials(TEXT("Damage"), 0.0f);
+}
+
 void ARoguelike3DCharacter::RecoveryHP(float value)
 {
 	m_ability.fHP += value;
 	if (m_ability.fHP > m_ability.fMaxHP) m_ability.fHP = m_ability.fMaxHP;
 }
 
-bool ARoguelike3DCharacter::IsSkilling() const
-{
-	return m_skilling;
-}
-
 void ARoguelike3DCharacter::MoveForward(float Value)
 {
-	if (m_skilling) return;
+	if (m_state != EPlayerState::Idle) return;
 
 	if ((Controller != NULL) && (Value != 0.0f))
 	{
@@ -127,7 +148,7 @@ void ARoguelike3DCharacter::MoveForward(float Value)
 
 void ARoguelike3DCharacter::MoveRight(float Value)
 {
-	if (m_skilling) return;
+	if (m_state != EPlayerState::Idle) return;
 
 	if ( (Controller != NULL) && (Value != 0.0f) )
 	{
@@ -169,25 +190,25 @@ void ARoguelike3DCharacter::StartTeleport(FVector TeleportLocation)
 	m_teleportLocation = TeleportLocation;
 	m_teleportLocation.Z = GetActorLocation().Z;
 
-	m_skilling = true;
+	m_state = EPlayerState::Skill;
 	m_characterAnimInstance->StartTeleport();
 }
 
 void ARoguelike3DCharacter::Teleport()
 {
 	SetActorLocation(m_teleportLocation, true);
-	m_skilling = false;
+	m_state = EPlayerState::Idle;
 }
 
 void ARoguelike3DCharacter::StartTripleFire()
 {
-	m_skilling = true;
+	m_state = EPlayerState::Skill;
 	m_characterAnimInstance->StartTripleFire();
 }
 
 void ARoguelike3DCharacter::TripleFire()
 {
-	m_skilling = false;
+	m_state = EPlayerState::Idle;
 
 	AEquipmentItem* pWeapon = Cast<AEquipmentItem>(m_inventory->GetWeapon());
 	if (!pWeapon) return;
@@ -209,4 +230,14 @@ void ARoguelike3DCharacter::TripleFire()
 			}
 		}
 	}
+}
+
+void ARoguelike3DCharacter::StartDeath()
+{
+	m_state = EPlayerState::Death;
+}
+
+void ARoguelike3DCharacter::Death()
+{
+
 }

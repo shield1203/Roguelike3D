@@ -8,6 +8,7 @@
 #include "Materials/MaterialInstanceDynamic.h"
 #include "Kismet/GameplayStatics.h"
 #include "Roguelike3DCharacter.h"
+#include "FloatingTextObject.h"
 
 ABossSkillObject::ABossSkillObject()
 {
@@ -86,7 +87,17 @@ void ABossSkillObject::FinishedTimer()
 		ARoguelike3DCharacter* pPlayer = Cast<ARoguelike3DCharacter>(overlappingActor);
 		if (pPlayer)
 		{
-			//
+			pPlayer->TakeDamagePlayer(m_damage);
+
+			FActorSpawnParameters SpawnParams;
+			SpawnParams.Owner = GetOwner();
+			SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+			auto pFloatingText = GetWorld()->SpawnActor<AFloatingTextObject>(GetActorLocation(), FRotator(0), SpawnParams);
+			if (pFloatingText)
+			{
+				pFloatingText->InitializeDamageText(m_damage, 1, 0, 0);
+			}
 		}
 		break;
 	}

@@ -11,6 +11,7 @@
 #include "PlayerProjectile.h"
 #include "EnemyBase.h"
 #include "EnemySpawnPlace.h"
+#include "FloatingTextObject.h"
 
 AGrimProjectile::AGrimProjectile()
 {
@@ -83,7 +84,17 @@ void AGrimProjectile::OnProjectileBeginOverlap(class UPrimitiveComponent* Overla
 	auto pPlayer = Cast<ARoguelike3DCharacter>(OtherActor);
 	if (pPlayer)
 	{
+		pPlayer->TakeDamagePlayer(m_damage);
 
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.Owner = GetOwner();
+		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+		auto pFloatingText = GetWorld()->SpawnActor<AFloatingTextObject>(GetActorLocation(), FRotator(0), SpawnParams);
+		if (pFloatingText)
+		{
+			pFloatingText->InitializeDamageText(m_damage, 1, 0, 0);
+		}
 	}
 
 	Destroy();
