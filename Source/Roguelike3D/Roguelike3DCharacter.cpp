@@ -7,12 +7,14 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "CharacterAnimInstance.h"
 #include "Inventory.h"
 #include "EquipmentItem.h"
 #include "PlayerProjectile.h"
 #include "SkillProjetile.h"
 #include "TimerManager.h"
+#include "ChapterGameMode.h"
 
 ARoguelike3DCharacter::ARoguelike3DCharacter()
 {
@@ -69,6 +71,7 @@ void ARoguelike3DCharacter::PostInitializeComponents()
 	m_characterAnimInstance->OnFire.BindUFunction(this, FName("Fire"));
 	m_characterAnimInstance->OnTeleport.BindUFunction(this, FName("Teleport"));
 	m_characterAnimInstance->OnTripleFire.BindUFunction(this, FName("TripleFire"));
+	m_characterAnimInstance->OnDeath.BindUFunction(this, FName("Death"));
 }
 
 void ARoguelike3DCharacter::Tick(float DeltaTime)
@@ -235,9 +238,20 @@ void ARoguelike3DCharacter::TripleFire()
 void ARoguelike3DCharacter::StartDeath()
 {
 	m_state = EPlayerState::Death;
+	m_characterAnimInstance->StartDeath();
+
+	const FRotator Rotation = Controller->GetControlRotation();
+	const FRotator YawRotation(0, Rotation.Yaw, 0);
+
+	const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+	AddMovementInput(Direction, -100);
 }
 
 void ARoguelike3DCharacter::Death()
 {
-
+	AChapterGameMode* pGameMode = Cast<AChapterGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+	if (pGameMode)
+	{
+		pGameMode->SetChapterResult(false);
+	}
 }

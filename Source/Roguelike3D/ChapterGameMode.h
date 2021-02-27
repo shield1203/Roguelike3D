@@ -33,6 +33,12 @@ private:
 	UPROPERTY(EditAnyWhere, Category = "GameMode_Widget", meta = (AllowPrivateAccess = "true"))
 	class UUserWidget* m_inventoryWidget;
 
+	UPROPERTY(EditAnyWhere, Category = "GameMode_Widget", meta = (AllowPrivateAccess = "true"))
+	class UUserWidget* m_successWidget;
+
+	UPROPERTY(EditAnyWhere, Category = "GameMode_Widget", meta = (AllowPrivateAccess = "true"))
+	class UUserWidget* m_failWidget;
+
 	UPROPERTY()
 	bool m_flipInventory;
 
@@ -41,6 +47,9 @@ private:
 
 	UPROPERTY()
 	TMap<int32, int32> m_enemyCount;
+
+	UPROPERTY()
+	bool m_chapterResult;
 
 protected:
 	virtual void StartPlay();
@@ -69,4 +78,6 @@ public:
 	void AddEnemyCount(int32 mapNumber);
 
 	void RemoveEnemy(int32 mapNumber);
+
+	void SetChapterResult(bool IsSuccess);
 };

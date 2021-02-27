@@ -131,6 +131,8 @@ void AEnemy_Grim::StartDeath()
 
 	m_HPBarWidgetComponent->SetVisibility(false);
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	RemoveEnemyCount();
 }
 
 void AEnemy_Grim::Death()

@@ -2,7 +2,9 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/WidgetComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "TimerManager.h"
+#include "ChapterGameMode.h"
 
 AEnemyBase::AEnemyBase()
 {
@@ -41,6 +43,11 @@ void AEnemyBase::DamageTimerFinished()
 	GetMesh()->SetScalarParameterValueOnMaterials(TEXT("Damage"), 0.0f);
 }
 
+void AEnemyBase::SetMapNumber(int32 mapNumber)
+{
+	m_mapNumber = mapNumber;
+}
+
 void AEnemyBase::SetEnemyState(EEnemyState state)
 {
 	m_enemyState = state;
@@ -74,4 +81,13 @@ float AEnemyBase::GetAttackRange() const
 float AEnemyBase::CurHPPercent() const
 {
 	return m_curHP / m_enemyData.MaxHP;
+}
+
+void AEnemyBase::RemoveEnemyCount()
+{
+	AChapterGameMode* pGameMode = Cast<AChapterGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+	if (pGameMode)
+	{
+		pGameMode->RemoveEnemy(m_mapNumber);
+	}
 }

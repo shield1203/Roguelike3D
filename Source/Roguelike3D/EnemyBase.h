@@ -61,6 +61,9 @@ protected:
 	EEnemyCode m_enemyCode;
 
 	UPROPERTY(VisibleAnywhere)
+	int32 m_mapNumber;
+
+	UPROPERTY(VisibleAnywhere)
 	FEnemyData m_enemyData;
 
 	UPROPERTY(VisibleAnywhere)
@@ -91,6 +94,8 @@ public:
 
 	void DamageTimerFinished();
 
+	void SetMapNumber(int32 mapNumber);
+
 	void SetEnemyState(EEnemyState state);
 
 	EEnemyState GetEnemyState() const;
@@ -99,4 +104,6 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	float CurHPPercent() const;
+
+	void RemoveEnemyCount();
 };

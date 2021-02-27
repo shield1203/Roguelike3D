@@ -1,4 +1,5 @@
 #include "Enemy_Boss.h"
+#include "Components/CapsuleComponent.h"
 #include "Blueprint/UserWidget.h"
 #include "UObject/ConstructorHelpers.h"
 #include "WidgetBase.h"
@@ -8,6 +9,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "Roguelike3DCharacter.h"
 #include "BossAnimInstance.h"
+#include "BossAIController.h"
+#include "ChapterGameMode.h"
 
 AEnemy_Boss::AEnemy_Boss()
 {
@@ -44,6 +47,7 @@ void AEnemy_Boss::PostInitializeComponents()
 	m_bossAnimInstance->OnPattrenB.BindUFunction(this, FName("PatternB"));
 	m_bossAnimInstance->OnPattrenC.BindUFunction(this, FName("PatternC"));
 	m_bossAnimInstance->OnEnd.BindUFunction(this, FName("EndPattern"));
+	m_bossAnimInstance->OnDeath.BindUFunction(this, FName("Death"));
 }
 
 void AEnemy_Boss::Tick(float DeltaTime)
@@ -65,7 +69,7 @@ void AEnemy_Boss::TakeDamageEnemy(float Damage)
 	if (m_curHP <= 0)
 	{
 		m_curHP = 0;
-		//StartDeath();
+		StartDeath();
 	}
 }
 
@@ -145,5 +149,26 @@ void AEnemy_Boss::PatternC()
 void AEnemy_Boss::EndPattern()
 {
 	m_enemyState = EEnemyState::Idle;
-	UE_LOG(LogTemp, Warning, TEXT("EndPattern"));
+}
+
+void AEnemy_Boss::StartDeath()
+{
+	m_enemyState = EEnemyState::Death;
+	m_bossAnimInstance->StartDeath();
+
+	ABossAIController* pController = Cast<ABossAIController>(GetController());
+	if (pController) pController->StopAI();
+
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+}
+
+void AEnemy_Boss::Death()
+{
+	m_BossHPBarWidget->RemoveFromViewport();
+
+	AChapterGameMode* pGameMode = Cast<AChapterGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+	if (pGameMode)
+	{
+		pGameMode->SetChapterResult(true);
+	}
 }

@@ -18,31 +18,44 @@ AChapterGameMode::AChapterGameMode()
 {	
 	PlayerControllerClass = ARoguelike3DPlayerController::StaticClass();
 	m_curMapNumber = 0;
+	m_chapterResult = false;
 
-	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/Blueprints/BP_Character"));
+	static ConstructorHelpers::FClassFinder<APawn>PlayerPawnBPClass(TEXT("/Game/Blueprints/BP_Character"));
 	if (PlayerPawnBPClass.Class != NULL)
 	{
 		DefaultPawnClass = PlayerPawnBPClass.Class;
 	}
 
-	static ConstructorHelpers::FClassFinder<UUserWidget> PlayerWidget(TEXT("/Game/Widgets/Chapter/WB_PlayerHUD"));
+	static ConstructorHelpers::FClassFinder<UUserWidget>PlayerWidget(TEXT("/Game/Widgets/Chapter/WB_PlayerHUD"));
 	if (PlayerWidget.Succeeded())
 	{
 		m_mainWidget = CreateWidget(GetWorld(), PlayerWidget.Class);
 	}
 
-	static ConstructorHelpers::FClassFinder<UUserWidget> BigmapWidget(TEXT("/Game/Widgets/Chapter/WB_Bigmap"));
+	static ConstructorHelpers::FClassFinder<UUserWidget>BigmapWidget(TEXT("/Game/Widgets/Chapter/WB_Bigmap"));
 	if (BigmapWidget.Succeeded())
 	{
 		m_bigmapWidget = CreateWidget(GetWorld(), BigmapWidget.Class);
 	}
 
-	static ConstructorHelpers::FClassFinder<UUserWidget> InventoryWidget(TEXT("/Game/Widgets/Chapter/WB_Inventory"));
+	static ConstructorHelpers::FClassFinder<UUserWidget>InventoryWidget(TEXT("/Game/Widgets/Chapter/WB_Inventory"));
 	if (InventoryWidget.Succeeded())
 	{
 		m_inventoryWidget = CreateWidget(GetWorld(), InventoryWidget.Class);
 	}
 	m_flipInventory = false;
+
+	static ConstructorHelpers::FClassFinder<UUserWidget>ChapterSuccessWidget(TEXT("/Game/Widgets/Chapter/WB_ChapterSuccess"));
+	if (ChapterSuccessWidget.Succeeded())
+	{
+		m_successWidget = CreateWidget(GetWorld(), ChapterSuccessWidget.Class);
+	}
+
+	static ConstructorHelpers::FClassFinder<UUserWidget>ChapterFailWidget(TEXT("/Game/Widgets/Chapter/WB_ChapterFail"));
+	if (ChapterFailWidget.Succeeded())
+	{
+		m_failWidget = CreateWidget(GetWorld(), ChapterFailWidget.Class);
+	}
 
 	m_portalSystem = CreateDefaultSubobject<UPortalSystem>(TEXT("GameMode_PortalSystem"));
 	m_chapterAssetManager = CreateDefaultSubobject<UChapterAssetManager>(TEXT("GameMode_ChapterAssetManager"));
@@ -56,10 +69,6 @@ void AChapterGameMode::StartPlay()
 
 	m_portalSystem->SetRandomRoguelikeMap();
 	m_portalSystem->StartActivePortals(0);
-	m_portalSystem->StartActivePortals(1);
-	m_portalSystem->StartActivePortals(2);
-	m_portalSystem->StartActivePortals(3);
-	m_portalSystem->StartActivePortals(4);
 
 	m_mainWidget->AddToViewport();
 
@@ -131,6 +140,8 @@ int32 AChapterGameMode::GetCurMapNumber() const
 
 void AChapterGameMode::VisibleBigmap(bool bVisibility)
 {
+	if (m_chapterResult) return;
+
 	if (bVisibility)
 	{
 		m_bigmapWidget->AddToViewport();
@@ -143,6 +154,8 @@ void AChapterGameMode::VisibleBigmap(bool bVisibility)
 
 void AChapterGameMode::FlipInventory()
 {
+	if (m_chapterResult) return;
+
 	if (m_flipInventory)
 	{
 		m_inventoryWidget->RemoveFromViewport();
@@ -177,5 +190,22 @@ void AChapterGameMode::RemoveEnemy(int32 mapNumber)
 	if (m_enemyCount[mapNumber] <= 0)
 	{
 		m_portalSystem->StartActivePortals(mapNumber);
+	}
+}
+
+void AChapterGameMode::SetChapterResult(bool IsSuccess)
+{
+	m_chapterResult = true;
+	m_mainWidget->RemoveFromViewport();
+	m_bigmapWidget->RemoveFromViewport();
+	m_inventoryWidget->RemoveFromViewport();
+
+	if (IsSuccess)
+	{
+		m_successWidget->AddToViewport();
+	}
+	else
+	{
+		m_failWidget->AddToViewport();
 	}
 }

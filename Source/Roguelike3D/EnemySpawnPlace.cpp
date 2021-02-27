@@ -39,6 +39,12 @@ void AEnemySpawnPlace::BeginPlay()
 	Super::BeginPlay();
 	
 	m_particleComponent->SetActive(false);
+
+	AChapterGameMode* pGameMode = Cast<AChapterGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+	if (pGameMode)
+	{
+		pGameMode->AddEnemyCount(m_mapNumber);
+	}
 }
 
 void AEnemySpawnPlace::Tick(float DeltaTime)
@@ -68,7 +74,8 @@ void AEnemySpawnPlace::OnPlayerInRange(class UPrimitiveComponent* OverlappedComp
 				FActorSpawnParameters SpawnParams;
 				SpawnParams.Owner = this;
 				SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-				pWorld->SpawnActor<AEnemyBase>(pGameMode->GetChapterAssetManager()->GetEnemyBlueprintClass(static_cast<uint8>(m_spawnEnemyCode)), GetActorLocation(), GetActorRotation(), SpawnParams);
+				AEnemyBase* pEnemy = pWorld->SpawnActor<AEnemyBase>(pGameMode->GetChapterAssetManager()->GetEnemyBlueprintClass(static_cast<uint8>(m_spawnEnemyCode)), GetActorLocation(), GetActorRotation(), SpawnParams);
+				pEnemy->SetMapNumber(m_mapNumber);
 			}
 		}
 	}

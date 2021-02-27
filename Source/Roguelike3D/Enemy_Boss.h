@@ -10,7 +10,6 @@ class ROGUELIKE3D_API AEnemy_Boss : public AEnemyBase
 	GENERATED_BODY()
 	
 private:
-	UPROPERTY(VisibleAnywhere)
 	class UBossAnimInstance* m_bossAnimInstance;
 
 	UPROPERTY(VisibleAnywhere)
@@ -48,4 +47,10 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void EndPattern();
+
+	UFUNCTION(BlueprintCallable)
+	void StartDeath();
+
+	UFUNCTION(BlueprintCallable)
+	void Death();
 };
