@@ -12,4 +12,15 @@ class ARoguelike3DGameMode : public AGameModeBase
 protected:
 	UPROPERTY(EditAnyWhere, Category = "GameMode_Widget", meta = (AllowPrivateAccess = "true"))
 	class UUserWidget* m_mainWidget;
+
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "GameMode_Sound", meta = (AllowPrivateAccess = "true"))
+	UAudioComponent* m_audioComponentBGM;
+
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "GameMode_Sound", meta = (AllowPrivateAccess = "true"))
+	class USoundCue* m_soundCueBGM;
+
+public:
+	ARoguelike3DGameMode();
+
+	void StopBGM();
 };

@@ -8,7 +8,8 @@
 #include "BigmapManager.h"
 #include "MinimapManager.h"
 #include "Portal.h"
-
+#include "Sound/SoundCue.h"
+#include "Components/AudioComponent.h"
 //
 #include "Kismet/GameplayStatics.h"
 #include "Inventory.h"
@@ -26,6 +27,7 @@ AChapterGameMode::AChapterGameMode()
 		DefaultPawnClass = PlayerPawnBPClass.Class;
 	}
 
+	// Widget  /////////////
 	static ConstructorHelpers::FClassFinder<UUserWidget>PlayerWidget(TEXT("/Game/Widgets/Chapter/WB_PlayerHUD"));
 	if (PlayerWidget.Succeeded())
 	{
@@ -57,6 +59,20 @@ AChapterGameMode::AChapterGameMode()
 		m_failWidget = CreateWidget(GetWorld(), ChapterFailWidget.Class);
 	}
 
+	// Sound //////
+	static ConstructorHelpers::FObjectFinder<USoundCue> ChapterBGM(TEXT("SoundCue'/Game/Resource/Sound/ChapterBGM_Cue.ChapterBGM_Cue'"));
+	if (ChapterBGM.Succeeded())
+	{
+		m_soundCueBGM = ChapterBGM.Object;
+	}
+	m_audioComponentBGM->SetSound(m_soundCueBGM);
+
+	static ConstructorHelpers::FObjectFinder<USoundCue> BossBGM(TEXT("SoundCue'/Game/Resource/Sound/BossBGM_Cue.BossBGM_Cue'"));
+	if (BossBGM.Succeeded())
+	{
+		m_bossCueBGM = BossBGM.Object;
+	}
+
 	m_portalSystem = CreateDefaultSubobject<UPortalSystem>(TEXT("GameMode_PortalSystem"));
 	m_chapterAssetManager = CreateDefaultSubobject<UChapterAssetManager>(TEXT("GameMode_ChapterAssetManager"));
 	m_bigmapManager = CreateDefaultSubobject<UBigmapManager>(TEXT("GameMode_BigmapManager"));
@@ -71,6 +87,7 @@ void AChapterGameMode::StartPlay()
 	m_portalSystem->StartActivePortals(0);
 
 	m_mainWidget->AddToViewport();
+	m_audioComponentBGM->Play();
 
 	// test
 	UWorld* pWorld = GetWorld();
@@ -193,12 +210,22 @@ void AChapterGameMode::RemoveEnemy(int32 mapNumber)
 	}
 }
 
+void AChapterGameMode::StartBossStage()
+{
+	StopBGM();
+
+	m_audioComponentBGM->SetSound(m_bossCueBGM);
+	m_audioComponentBGM->Play();
+}
+
 void AChapterGameMode::SetChapterResult(bool IsSuccess)
 {
 	m_chapterResult = true;
 	m_mainWidget->RemoveFromViewport();
 	m_bigmapWidget->RemoveFromViewport();
 	m_inventoryWidget->RemoveFromViewport();
+
+	StopBGM();
 
 	if (IsSuccess)
 	{

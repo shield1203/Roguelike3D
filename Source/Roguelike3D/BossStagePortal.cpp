@@ -110,6 +110,7 @@ void ABossStagePortal::OnPressButton()
 			if (pGameMode)
 			{
 				pGameMode->SetCurMapNumber(-1, 0, 0);
+				pGameMode->StartBossStage();
 			}
 		}
 	}

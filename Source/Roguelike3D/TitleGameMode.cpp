@@ -1,6 +1,8 @@
 #include "TitleGameMode.h"
 #include "Blueprint/UserWidget.h"
 #include "UObject/ConstructorHelpers.h"
+#include "Components/AudioComponent.h"
+#include "Sound/SoundCue.h"
 #include "TitleController.h"
 
 ATitleGameMode::ATitleGameMode()
@@ -12,6 +14,13 @@ ATitleGameMode::ATitleGameMode()
 	}
 
 	PlayerControllerClass = ATitleController::StaticClass();
+
+	static ConstructorHelpers::FObjectFinder<USoundCue> TitleBGM(TEXT("SoundCue'/Game/Resource/Sound/TitleBGM_Cue.TitleBGM_Cue'"));
+	if (TitleBGM.Succeeded())
+	{
+		m_soundCueBGM = TitleBGM.Object;
+	}
+	m_audioComponentBGM->SetSound(m_soundCueBGM);
 }
 
 void ATitleGameMode::StartPlay()
@@ -19,4 +28,5 @@ void ATitleGameMode::StartPlay()
 	Super::StartPlay();
 
 	m_mainWidget->AddToViewport();
+	m_audioComponentBGM->Play();
 }

@@ -39,6 +39,9 @@ private:
 	UPROPERTY(EditAnyWhere, Category = "GameMode_Widget", meta = (AllowPrivateAccess = "true"))
 	class UUserWidget* m_failWidget;
 
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "GameMode_Sound", meta = (AllowPrivateAccess = "true"))
+	class USoundCue* m_bossCueBGM;
+
 	UPROPERTY()
 	bool m_flipInventory;
 
@@ -78,6 +81,8 @@ public:
 	void AddEnemyCount(int32 mapNumber);
 
 	void RemoveEnemy(int32 mapNumber);
+
+	void StartBossStage();
 
 	void SetChapterResult(bool IsSuccess);
 };
