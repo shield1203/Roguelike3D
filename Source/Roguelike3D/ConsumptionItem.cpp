@@ -1,4 +1,5 @@
 #include "ConsumptionItem.h"
+#include "Components/SceneComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/BoxComponent.h"
 #include "Blueprint/UserWidget.h"
@@ -28,12 +29,10 @@ void AConsumptionItem::BeginPlay()
 {
 	Super::BeginPlay();
 
-	LoadItemData();
-
 	srand((unsigned int)time(0));
 	int32 nImpulseValueX = (rand() % 800) - 400;
 	int32 nImpulseValueY = (rand() % 800) - 400;
-	m_collisionComponent->AddImpulse(FVector(nImpulseValueX, nImpulseValueY, 0), NAME_None, true);
+	m_collisionComponent->AddImpulse(FVector(nImpulseValueX, nImpulseValueY, 400), NAME_None, true);
 }
 
 void AConsumptionItem::Tick(float DeltaTime)
@@ -46,7 +45,9 @@ void AConsumptionItem::Tick(float DeltaTime)
 
 void AConsumptionItem::SetItemCode(EConsumptionItemCode itemCode)
 {
-	m_itemData.ItemCode = itemCode;
+	m_itemCode = itemCode;
+
+	LoadItemData();
 }
 
 void AConsumptionItem::LoadItemData()
@@ -96,7 +97,7 @@ void AConsumptionItem::OnPlayerBeginOverlap(class UPrimitiveComponent* Overlappe
 		SpawnParams.Owner = GetOwner();
 		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
-		auto pFloatingText = GetWorld()->SpawnActor<AFloatingTextObject>(GetActorLocation(), FRotator(0), SpawnParams);
+		auto pFloatingText = GetWorld()->SpawnActor<AFloatingTextObject>(m_staticMeshComponent->GetComponentLocation(), FRotator(0), SpawnParams);
 		if (pFloatingText)
 		{
 			pFloatingText->InitializeConsumptionText(m_itemData.Value, m_itemData.Target, m_itemData.R, m_itemData.G, m_itemData.B);

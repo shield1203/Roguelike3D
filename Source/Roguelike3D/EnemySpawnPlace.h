@@ -30,6 +30,9 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class UParticleSystemComponent* m_particleComponent;
 
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	UAudioComponent* m_audioComponent;
+
 	FTimerHandle m_enemySpawnTimerHandle;
 
 protected:

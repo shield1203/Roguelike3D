@@ -101,18 +101,21 @@ void AEnemy_Boss::PatternA()
 
 	ACharacter* const pPlayer = UGameplayStatics::GetPlayerCharacter(pWorld, 0);
 
-	FNavLocation randomLocation;
-	UNavigationSystemV1* const pNavSystem = UNavigationSystemV1::GetCurrent(GetWorld());
-	if (pWorld && pNavSystem->GetRandomPointInNavigableRadius(pPlayer->GetActorLocation(), 200.f, randomLocation, nullptr))
+	if (pWorld)
 	{
 		FActorSpawnParameters SpawnParams;
 		SpawnParams.Owner = this;
 		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
-		ABossSkillObject* pObject = pWorld->SpawnActor<ABossSkillObject>(randomLocation.Location, FRotator(0), SpawnParams);
+		FVector randomLocation = pPlayer->GetActorLocation();
+		srand((unsigned int)time(0));
+		randomLocation.X += (rand() % 200);
+		randomLocation.Y += (rand() % 200);
+
+		ABossSkillObject* pObject = pWorld->SpawnActor<ABossSkillObject>(randomLocation, FRotator(0), SpawnParams);
 		if (pObject)
 		{
-			pObject->InitializeSkillObject(20.f, 2.f);
+			pObject->InitializeSkillObject(50.f, 2.f);
 		}
 	}
 }

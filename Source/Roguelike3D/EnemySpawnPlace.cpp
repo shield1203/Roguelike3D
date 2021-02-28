@@ -2,6 +2,8 @@
 #include "Components/SceneComponent.h"
 #include "Components/SphereComponent.h"
 #include "Particles/ParticleSystemComponent.h"
+#include "Components/AudioComponent.h"
+#include "Sound/SoundCue.h"
 #include "Kismet/GameplayStatics.h"
 #include "TimerManager.h"
 #include "Roguelike3DCharacter.h"
@@ -32,6 +34,14 @@ AEnemySpawnPlace::AEnemySpawnPlace()
 	{
 		m_particleComponent->SetTemplate(EnemySpawnParticleAsset.Object);
 	}
+
+	m_audioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("EnemySpawnAudioComponent"));
+	static ConstructorHelpers::FObjectFinder<USoundCue>EnemySpawnSound(TEXT("SoundCue'/Game/Resource/Sound/EnemySpawn_Cue.EnemySpawn_Cue'"));
+	if (EnemySpawnSound.Succeeded())
+	{
+		m_audioComponent->SetSound(EnemySpawnSound.Object);
+	}
+	m_audioComponent->bAutoActivate = false;
 }
 
 void AEnemySpawnPlace::BeginPlay()
@@ -76,6 +86,8 @@ void AEnemySpawnPlace::OnPlayerInRange(class UPrimitiveComponent* OverlappedComp
 				SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 				AEnemyBase* pEnemy = pWorld->SpawnActor<AEnemyBase>(pGameMode->GetChapterAssetManager()->GetEnemyBlueprintClass(static_cast<uint8>(m_spawnEnemyCode)), GetActorLocation(), GetActorRotation(), SpawnParams);
 				pEnemy->SetMapNumber(m_mapNumber);
+
+				m_audioComponent->Play();
 			}
 		}
 	}

@@ -22,6 +22,8 @@ ARoguelike3DCharacter::ARoguelike3DCharacter()
 	
 	m_state = EPlayerState::Idle;
 
+	m_inventory = CreateDefaultSubobject<UInventory>(TEXT("CharacterInventory"));
+
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 
 	bUseControllerRotationPitch = false;
@@ -45,8 +47,6 @@ ARoguelike3DCharacter::ARoguelike3DCharacter()
 	{
 		GetMesh()->CreateDynamicMaterialInstance(Index);
 	}
-
-	m_inventory = CreateDefaultSubobject<UInventory>(TEXT("Character_Inventory"));
 
 	//////
 	m_ability.fMaxHP = 200.f;

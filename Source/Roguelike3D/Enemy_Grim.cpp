@@ -12,6 +12,7 @@
 #include "GrimAnimInstance.h"
 #include "EnemyAIController.h"
 #include "GrimProjectile.h"
+#include "ConsumptionItem.h"
 
 AEnemy_Grim::AEnemy_Grim()
 {
@@ -137,6 +138,23 @@ void AEnemy_Grim::StartDeath()
 
 void AEnemy_Grim::Death()
 {
+	srand((unsigned int)time(0));
+	int32 randomCount = (rand() % static_cast<int32>(EConsumptionItemCode::TotalItemCount));
+
+	UWorld* pWorld = GetWorld();
+	if (pWorld)
+	{
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.Owner = this;
+		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+		AConsumptionItem* pItem = pWorld->SpawnActor<AConsumptionItem>(GetActorLocation(), GetActorRotation(), SpawnParams);
+		if (pItem)
+		{
+			pItem->SetItemCode(static_cast<EConsumptionItemCode>(randomCount));
+		}
+	}
+
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), m_particleSystem, GetMesh()->GetSocketLocation(TEXT("spine_04")), GetActorRotation());
 	Destroy();
 }

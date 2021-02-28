@@ -6,6 +6,7 @@
 #include "Materials/Material.h"
 #include "Materials/MaterialInterface.h"
 #include "Materials/MaterialInstanceDynamic.h"
+#include "Sound/SoundCue.h"
 #include "Kismet/GameplayStatics.h"
 #include "Roguelike3DCharacter.h"
 #include "FloatingTextObject.h"
@@ -37,6 +38,12 @@ ABossSkillObject::ABossSkillObject()
 	if (BossSkillObjectParticle.Succeeded())
 	{
 		m_particleSystem = BossSkillObjectParticle.Object;
+	}
+
+	static ConstructorHelpers::FObjectFinder<USoundCue>BossObjectSound(TEXT("SoundCue'/Game/Resource/Sound/Boom_Cue.Boom_Cue'"));
+	if (BossObjectSound.Succeeded())
+	{
+		m_soundCue = BossObjectSound.Object;
 	}
 
 	m_maxTime = 2.0f;
@@ -103,6 +110,7 @@ void ABossSkillObject::FinishedTimer()
 	}
 
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), m_particleSystem, GetActorLocation(), GetActorRotation(), FVector(0.59f));
+	UGameplayStatics::SpawnSoundAtLocation(GetWorld(), m_soundCue, GetActorLocation(), GetActorRotation());
 
 	Destroy();
 }

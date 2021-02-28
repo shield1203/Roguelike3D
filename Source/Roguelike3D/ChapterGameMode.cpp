@@ -17,9 +17,10 @@
 
 AChapterGameMode::AChapterGameMode()
 {	
-	PlayerControllerClass = ARoguelike3DPlayerController::StaticClass();
 	m_curMapNumber = 0;
 	m_chapterResult = false;
+
+	PlayerControllerClass = ARoguelike3DPlayerController::StaticClass();
 
 	static ConstructorHelpers::FClassFinder<APawn>PlayerPawnBPClass(TEXT("/Game/Blueprints/BP_Character"));
 	if (PlayerPawnBPClass.Class != NULL)
@@ -125,7 +126,7 @@ void AChapterGameMode::StartPlay()
 		pPlayerPawn->GetInventory()->AddItem(item04);
 		pPlayerPawn->GetInventory()->AddItem(item05);
 		pPlayerPawn->GetInventory()->AddItem(item06);
-	}	
+	}
 }
 
 UChapterAssetManager* AChapterGameMode::GetChapterAssetManager() const

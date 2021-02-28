@@ -37,6 +37,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class UWidgetComponent* m_buttonWidgetComponent;
 
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	UAudioComponent* m_audioComponent;
+
 	UPROPERTY()
 	APortal* m_arrivalPortal;
 

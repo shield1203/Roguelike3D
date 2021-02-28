@@ -11,6 +11,7 @@ enum class EConsumptionItemCode : uint8
 	Coin UMETA(DisplayName = "Consumption_Coin"),
 	Milkshake UMETA(DisplayName = "Consumption_Milkshake"),
 	Donut UMETA(DisplayName = "Consumption_Donut"),
+	TotalItemCount UMETA(DisplayName = "TotalItemCount"),
 };
 
 USTRUCT(BlueprintType)

@@ -4,12 +4,15 @@
 #include "Components/StaticMeshComponent.h"
 #include "Components/WidgetComponent.h"
 #include "Particles/ParticleSystemComponent.h"
+#include "Components/AudioComponent.h"
+#include "Sound/SoundCue.h"
 #include "Blueprint/UserWidget.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Kismet/GameplayStatics.h"
 #include "Roguelike3DCharacter.h"
 #include "ChapterGameMode.h"
 #include "PortalSystem.h"
+#include "GameFramework/PlayerController.h"
 
 APortal::APortal()
 {
@@ -59,6 +62,14 @@ APortal::APortal()
 	m_buttonWidgetComponent->SetRelativeLocation(FVector(-40.0f, 0.0f, 51.0f));
 	m_buttonWidgetComponent->RegisterComponent();
 
+	m_audioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("PortalAudioComponent"));
+	static ConstructorHelpers::FObjectFinder<USoundCue>PortalSound(TEXT("SoundCue'/Game/Resource/Sound/Portal_Cue.Portal_Cue'"));
+	if (PortalSound.Succeeded())
+	{
+		m_audioComponent->SetSound(PortalSound.Object);
+	}
+	m_audioComponent->bAutoActivate = false;
+
 	SetActivation(false);
 }
 
@@ -73,8 +84,6 @@ void APortal::BeginPlay()
 void APortal::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	//if(WasInput)
 }
 
 void APortal::SetArrivalPortal(APortal* ArrivalPortal, int32 xPos, int32 yPos)
@@ -109,7 +118,8 @@ void APortal::OnPlayerBeginOverlap(class UPrimitiveComponent* OverlappedComp, cl
 	if (pPlayerPawn != nullptr)
 	{
 		m_buttonWidgetComponent->SetVisibility(true);
-		EnableInput(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+
+		EnableInput(Cast<APlayerController>(pPlayerPawn->GetController()));
 
 		m_particleComponent->SetActive(true);
 	}
@@ -122,7 +132,7 @@ void APortal::OnPlayerEndOverlap(class UPrimitiveComponent* OverlappedComp, clas
 	if (pPlayerPawn != nullptr)
 	{
 		m_buttonWidgetComponent->SetVisibility(false);
-		DisableInput(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+		DisableInput(Cast<APlayerController>(pPlayerPawn->GetController()));
 
 		m_particleComponent->SetActive(false);
 	}
@@ -130,6 +140,8 @@ void APortal::OnPlayerEndOverlap(class UPrimitiveComponent* OverlappedComp, clas
 
 void APortal::OnPressButton()
 {
+	UE_LOG(LogTemp, Warning, TEXT("Is Work"));
+
 	if (!m_activation) return;
 
 	ARoguelike3DCharacter* pPlayer = Cast<ARoguelike3DCharacter>(UGameplayStatics::GetPlayerPawn(this, 0));
@@ -138,6 +150,8 @@ void APortal::OnPressButton()
 		FVector destinationLocation = m_arrivalPortal->GetActorLocation();
 		destinationLocation.Z += 50.f;
 		pPlayer->SetActorLocation(destinationLocation);
+
+		m_audioComponent->Play();
 
 		UWorld* pWorld = GetWorld();
 		if (pWorld)

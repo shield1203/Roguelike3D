@@ -25,6 +25,9 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class UMaterialInstanceDynamic* m_rangeMaterial;
 
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	class USoundCue* m_soundCue;
+
 	UPROPERTY()
 	float m_leftTime;
 

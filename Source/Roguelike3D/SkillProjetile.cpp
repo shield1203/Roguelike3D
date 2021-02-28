@@ -8,6 +8,7 @@
 #include "Materials/Material.h"
 #include "Kismet/GameplayStatics.h"
 #include "EnemyBase.h"
+#include "FloatingTextObject.h"
 
 ASkillProjetile::ASkillProjetile()
 {
@@ -75,6 +76,18 @@ void ASkillProjetile::OnProjectileBeginOverlap(class UPrimitiveComponent* Overla
 {
 	AEnemyBase* pEnemy = Cast<AEnemyBase>(OtherActor);
 	if (!pEnemy) return;
+
+	pEnemy->TakeDamageEnemy(m_damage);
+
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.Owner = GetOwner();
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+	auto pFloatingText = GetWorld()->SpawnActor<AFloatingTextObject>(GetActorLocation(), FRotator(0), SpawnParams);
+	if (pFloatingText)
+	{
+		pFloatingText->InitializeDamageText(m_damage, 1, 1, 1);
+	}
 
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), m_particleSystem, GetActorLocation(), GetActorRotation());
 }
